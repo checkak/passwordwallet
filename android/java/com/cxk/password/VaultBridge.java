@@ -208,7 +208,7 @@ public class VaultBridge {
                     conn.setReadTimeout(5000);
                     conn.setRequestProperty("Accept", "application/json");
                     conn.setRequestProperty("Cache-Control", "no-cache");
-                    conn.setRequestProperty("User-Agent", "PasswordWallet/0.7 (Android)");
+                    conn.setRequestProperty("User-Agent", "PasswordWallet/0.8 (Android)");
                     int code = conn.getResponseCode();
                     java.io.InputStream is = code >= 400 ? conn.getErrorStream() : conn.getInputStream();
                     java.io.ByteArrayOutputStream bos = new java.io.ByteArrayOutputStream();
@@ -231,8 +231,8 @@ public class VaultBridge {
 
             if ("app.info".equals(method)) {
                 JSONObject r = new JSONObject();
-                r.put("version", "0.7");
-                r.put("build", "7");
+                r.put("version", "0.8");
+                r.put("build", "8");
                 r.put("platform", "android");
                 return ok(r);
             }

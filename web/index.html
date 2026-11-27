@@ -145,7 +145,7 @@
         <div class="group-title">关于</div>
         <div class="setting-row" id="rowHelp"><div class="sr-main"><span class="sr-icon">📖</span><span>使用手册</span></div><span class="chev">›</span></div>
         <div class="setting-row" id="rowUpdate"><div class="sr-main"><span class="sr-icon">🔄</span><span>版本更新</span><i class="red-dot hidden" id="updateDot"></i></div><span class="sr-value" id="updateState">已是最新</span></div>
-        <div class="setting-row"><div class="sr-main"><span class="sr-icon">💡</span><span>版本</span></div><span class="sr-value" id="appVersion">V0.7</span></div>
+        <div class="setting-row"><div class="sr-main"><span class="sr-icon">💡</span><span>版本</span></div><span class="sr-value" id="appVersion">V0.8</span></div>
         <div class="setting-row"><div class="sr-main"><span class="sr-icon">✍️</span><span>作者</span></div><span class="sr-value author">不愿透露姓名的程同学@2026</span></div>
       </div>
     </main>
@@ -339,7 +339,7 @@
           <div class="help-hero-icon">📖</div>
           <div class="help-hero-body">
             <div class="help-hero-title">使用手册</div>
-            <div class="help-hero-sub">V0.7 · 操作方法与版本记录</div>
+            <div class="help-hero-sub">V0.8 · 操作方法与版本记录</div>
           </div>
         </div>
 
@@ -384,7 +384,15 @@
         <div class="help-card">
           <h4>版本更新</h4>
           <div class="log-item">
-            <span class="log-tag current">V0.7</span>
+            <span class="log-tag current">V0.8</span>
+            <ul>
+              <li>修复 Android 端联网检查失败：补上 INTERNET / ACCESS_NETWORK_STATE 权限</li>
+              <li>更新页在失败时显示具体原因（网络不通 / DNS / 权限等）</li>
+              <li>版本号升至 0.8</li>
+            </ul>
+          </div>
+          <div class="log-item">
+            <span class="log-tag">V0.7</span>
             <ul>
               <li>轮盘模式重做为「左轮转盘」：卡片扇形叠放，上滑 / 下滑切换，选中卡放大浮起</li>
               <li>模式切换改为右上角按钮，与模板库、添加并排；去掉页面里的分段开关</li>
@@ -476,11 +484,11 @@
 
         <div class="update-ver">
           <span class="uv-label">当前版本</span>
-          <span class="uv-right"><span class="uv-value" id="uvCurrent">V0.7</span></span>
+          <span class="uv-right"><span class="uv-value" id="uvCurrent">V0.8</span></span>
         </div>
         <div class="update-ver">
           <span class="uv-label">最新版本</span>
-          <span class="uv-right"><span class="uv-value fresh" id="uvLatest">V0.7</span><span class="badge-new hidden" id="uvBadge">NEW</span></span>
+          <span class="uv-right"><span class="uv-value fresh" id="uvLatest">V0.8</span><span class="badge-new hidden" id="uvBadge">NEW</span></span>
         </div>
         <p class="update-checked" id="updateChecked">未配置更新源（离线模式，仅比对安装包内版本）</p>
 
@@ -493,9 +501,17 @@
         </div>
 
         <div class="help-card" style="margin-top:16px">
-          <h4>V0.7 更新内容</h4>
+          <h4>V0.8 更新内容</h4>
           <div class="log-item">
-            <span class="log-tag current">V0.7</span>
+            <span class="log-tag current">V0.8</span>
+            <ul>
+              <li>Android 联网检查补权限（INTERNET / ACCESS_NETWORK_STATE）</li>
+              <li>更新页失败时显示具体原因</li>
+              <li>版本号 0.8（iOS 0.8 / build 8，Android 0.8 / versionCode 8）</li>
+            </ul>
+          </div>
+          <div class="log-item">
+            <span class="log-tag">V0.7</span>
             <ul>
               <li>轮盘模式改为左轮转盘（扇形叠放 + 上下滑动切换 + 选中卡片浮起）</li>
               <li>模式切换挪到右上角按钮；删除卡片加弹窗确认</li>

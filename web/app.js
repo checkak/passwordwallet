@@ -1,4 +1,4 @@
-﻿/* 密码卡包 V0.1 — 应用逻辑层
+/* 密码卡包 V0.1 — 应用逻辑层
  * 原生壳（iOS IPA）通过 window.webkit.messageHandlers.vaultBridge 提供加密存储与剪贴板；
  * 浏览器直接打开时自动降级到 localStorage，便于本地预览与调试。
  */
@@ -100,7 +100,7 @@
   };
 
   /* 版本更新：随包发布的“最新版本”，用于小红点与更新页 */
-  const LATEST_VERSION = '0.7';
+  const LATEST_VERSION = '0.8';
 
   /* 联网检查地址（二选一，留空 = 关闭联网检查）。
      A. GitHub Releases 推荐：填 '用户名/仓库名'，例 'cheng/passwordwallet'
@@ -803,7 +803,12 @@
     const mins = Math.max(0, Math.round((Date.now() - at) / 60000));
     const when = mins < 1 ? '刚刚' : (mins < 60 ? mins + ' 分钟前' : Math.round(mins / 60) + ' 小时前');
     const src = mode === 'github' ? 'GitHub Releases' : '更新源';
-    node.textContent = '上次检查：' + when + ' · ' + src + (state.settings.lastCheckOk ? ' 正常' : ' 不可达');
+    if (state.settings.lastCheckOk) {
+      node.textContent = '上次检查：' + when + ' · ' + src + ' 正常';
+    } else {
+      const reason = String(state.settings.lastCheckError || '').slice(0, 40);
+      node.textContent = '上次检查：' + when + ' · ' + src + ' 不可达' + (reason ? '（' + reason + '）' : '');
+    }
   }
 
   /* 远程更新说明（有新版本时展示 Release 正文） */
