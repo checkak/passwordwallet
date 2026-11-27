@@ -209,7 +209,7 @@ public class VaultBridge {
                     conn.setRequestProperty("Accept", "application/json");
                     conn.setRequestProperty("X-GitHub-Api-Version", "2022-11-28");
                     conn.setRequestProperty("Cache-Control", "no-cache");
-                    conn.setRequestProperty("User-Agent", "PasswordWallet/0.11 (Android)");
+                    conn.setRequestProperty("User-Agent", "PasswordWallet/0.12 (Android)");
                     int code = conn.getResponseCode();
                     java.io.InputStream is = code >= 400 ? conn.getErrorStream() : conn.getInputStream();
                     java.io.ByteArrayOutputStream bos = new java.io.ByteArrayOutputStream();
@@ -232,8 +232,8 @@ public class VaultBridge {
 
             if ("app.info".equals(method)) {
                 JSONObject r = new JSONObject();
-                r.put("version", "0.11");
-                r.put("build", "11");
+                r.put("version", "0.12");
+                r.put("build", "12");
                 r.put("platform", "android");
                 return ok(r);
             }

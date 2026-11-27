@@ -145,7 +145,7 @@
         <div class="group-title">关于</div>
         <div class="setting-row" id="rowHelp"><div class="sr-main"><span class="sr-icon">📖</span><span>使用手册</span></div><span class="chev">›</span></div>
         <div class="setting-row" id="rowUpdate"><div class="sr-main"><span class="sr-icon">🔄</span><span>版本更新</span><i class="red-dot hidden" id="updateDot"></i></div><span class="sr-value" id="updateState">已是最新</span></div>
-        <div class="setting-row"><div class="sr-main"><span class="sr-icon">💡</span><span>版本</span></div><span class="sr-value" id="appVersion">V0.11</span></div>
+        <div class="setting-row"><div class="sr-main"><span class="sr-icon">💡</span><span>版本</span></div><span class="sr-value" id="appVersion">V0.12</span></div>
         <div class="setting-row"><div class="sr-main"><span class="sr-icon">✍️</span><span>作者</span></div><span class="sr-value author">不愿透露姓名的程同学@2026</span></div>
       </div>
     </main>
@@ -339,7 +339,7 @@
           <div class="help-hero-icon">📖</div>
           <div class="help-hero-body">
             <div class="help-hero-title">使用手册</div>
-            <div class="help-hero-sub">V0.11 · 操作方法与版本记录</div>
+            <div class="help-hero-sub">V0.12 · 操作方法与版本记录</div>
           </div>
         </div>
 
@@ -384,106 +384,108 @@
         <div class="help-card">
           <h4>版本更新</h4>
           <div class="log-item">
-            <span class="log-tag current">V0.11</span>
+            <span class="log-tag current">V0.12</span>
             <ul>
-              <li>卡片图标换成真实 App 图标（Simple Icons 品牌矢量图，39 个常用 App 已覆盖）</li>
-              <li>卡片排版按参考图重做：左侧白色圆角图标 + 右侧名称 / 账号 / 密码三行</li>
-              <li>账号与密码前恢复「账号」「密码」标签</li>
+              <li>更新页版本说明精简：只写更新了什么，版本号统一写作「版本号升至 x」</li>
+              <li>版本号升至 0.12</li>
+            </ul>
+          </div>
+          <div class="log-item">
+            <span class="log-tag">V0.11</span>
+            <ul>
+              <li>卡片和列表换成真实 App 图标</li>
+              <li>卡片排版重做，账号、密码前加上标签</li>
               <li>版本号升至 0.11</li>
             </ul>
           </div>
           <div class="log-item">
             <span class="log-tag">V0.10</span>
             <ul>
-              <li>卡片阴影改用卡片主色、只向右侧和下方投射，左侧不投影</li>
-              <li>列表模式去掉阴影，改用细边框分隔</li>
-              <li>更新页状态文案：有新版本提示「请及时更新！」，无新版本显示「已是最新版本无需更新~」</li>
+              <li>卡片阴影更细腻，只向右侧和下方投射，并贴合卡片颜色</li>
+              <li>列表模式去掉黑色阴影</li>
+              <li>更新页提示改为「请及时更新」和「已是最新版本无需更新」</li>
               <li>版本号升至 0.10</li>
             </ul>
           </div>
           <div class="log-item">
             <span class="log-tag">V0.9</span>
             <ul>
-              <li>修复 iOS 端 GitHub 检查 403：新增 release 内 version.json 备用通道，绕开 API 限流</li>
-              <li>去掉卡片黑色阴影框：改用轻量投影，WebView 下不再出现矩形暗块</li>
-              <li>轮盘卡片放大（高 128、图标 54、卡片更宽）</li>
+              <li>修复 iOS 检查更新失败的问题</li>
+              <li>卡片阴影不再出现黑色方框</li>
+              <li>轮盘卡片放大</li>
               <li>版本号升至 0.9</li>
             </ul>
           </div>
           <div class="log-item">
             <span class="log-tag">V0.8</span>
             <ul>
-              <li>修复 Android 端联网检查失败：补上 INTERNET / ACCESS_NETWORK_STATE 权限</li>
-              <li>更新页在失败时显示具体原因（网络不通 / DNS / 权限等）</li>
+              <li>修复 Android 无法检查更新的问题</li>
+              <li>检查失败时显示具体原因</li>
               <li>版本号升至 0.8</li>
             </ul>
           </div>
           <div class="log-item">
             <span class="log-tag">V0.7</span>
             <ul>
-              <li>轮盘模式重做为「左轮转盘」：卡片扇形叠放，上滑 / 下滑切换，选中卡放大浮起</li>
-              <li>模式切换改为右上角按钮，与模板库、添加并排；去掉页面里的分段开关</li>
-              <li>删除卡片改为弹窗二次确认（清空全部卡片同样如此）</li>
-              <li>分类扩到 14 类、图标扩到 56 个</li>
+              <li>轮盘模式改为左轮转盘，上下滑动切换</li>
+              <li>模式切换挪到右上角按钮</li>
+              <li>删除卡片加确认弹窗</li>
+              <li>分类 14 类、图标 56 个</li>
               <li>版本号升至 0.7</li>
             </ul>
           </div>
           <div class="log-item">
             <span class="log-tag">V0.6</span>
             <ul>
-              <li>版本更新接入 GitHub Releases：配置「用户名/仓库名」后读取最新 release</li>
-              <li>更新页展示远端更新说明，版本号支持 v0.6 / 0.6 / 0.6-beta 写法</li>
-              <li>版本号升至 0.6（iOS 0.6 / build 6，Android 0.6 / versionCode 6）</li>
+              <li>支持从 GitHub 检查新版本</li>
+              <li>更新页显示新版本的更新说明</li>
+              <li>版本号升至 0.6</li>
             </ul>
           </div>
           <div class="log-item">
             <span class="log-tag">V0.5</span>
             <ul>
-              <li>版本更新支持联网检查（需配置更新源 JSON 地址），启动时静默拉取最新版本号</li>
-              <li>更新页显示「上次检查」状态，更新源不可达时静默降级</li>
-              <li>「清空全部卡片」加弹窗二次确认，防止误删</li>
-              <li>版本号升至 0.5（iOS 0.5 / build 5，Android 0.5 / versionCode 5）</li>
+              <li>支持联网检查新版本</li>
+              <li>更新页显示检查状态</li>
+              <li>清空全部卡片加确认弹窗</li>
+              <li>版本号升至 0.5</li>
             </ul>
           </div>
           <div class="log-item">
             <span class="log-tag">V0.4</span>
             <ul>
-              <li>轮盘卡片高度 132→116pt，四周加强投影，卡片更小巧也更立体</li>
-              <li>分类页分组标题加配色标签（社交蓝 / 支付橙 / 购物红 / 影音紫 / 游戏绿 / 工具青 / 金融金）</li>
-              <li>「关于」新增版本更新入口，有新版本显示小红点，点开后红点消失</li>
-              <li>版本号升至 0.4（iOS 0.4 / build 4，Android 0.4 / versionCode 4）</li>
+              <li>轮盘卡片缩小并加阴影</li>
+              <li>分类页标题加配色标签</li>
+              <li>关于页新增版本更新入口</li>
+              <li>版本号升至 0.4</li>
             </ul>
           </div>
           <div class="log-item">
             <span class="log-tag">V0.3</span>
             <ul>
-              <li>卡片上的账号新增「账号」标签，与「密码」标签左右对齐</li>
-              <li>首页新增搜索框：按 App 名 / 账号 / 分类 / 备注即时过滤，轮盘与列表同时生效</li>
-              <li>搜索框移到首页最上方，输入提示简化为「搜索」</li>
-              <li>轮盘卡片整体缩小（高度 156→132pt），一屏能看到更多卡片</li>
-              <li>搜索无结果时显示空状态提示，点 ✕ 一键清空</li>
-              <li>版本号升至 0.3（iOS 0.3 / build 3，Android 0.3 / versionCode 3）</li>
+              <li>卡片账号加「账号」标签</li>
+              <li>首页新增搜索</li>
+              <li>版本号升至 0.3</li>
             </ul>
           </div>
           <div class="log-item">
             <span class="log-tag">V0.2</span>
             <ul>
-              <li>模板库标题由「主流 App 模板」改为「模板库」</li>
-              <li>模板从 22 个扩充到 67 个，覆盖社交 / 支付 / 购物 / 影音 / 游戏 / 工具 / 金融</li>
-              <li>备注输入提示改为「填写你的小秘密」</li>
-              <li>轮盘卡片上的账号与密码分行显示，窄屏不再挤在一起</li>
-              <li>卡片配色新增自定义 RGB 取色（三通道滑杆 + 实时预览）</li>
-              <li>使用手册独立成页，写成操作方法与版本日志（不再复用卡片详情）</li>
+              <li>模板库改名并扩充到 67 个模板</li>
+              <li>备注提示改为「填写你的小秘密」</li>
+              <li>卡片配色新增自定义 RGB</li>
+              <li>使用手册独立成页</li>
               <li>版本号升至 0.2</li>
             </ul>
           </div>
           <div class="log-item">
             <span class="log-tag">V0.1</span>
             <ul>
-              <li>首个版本：轮盘 / 列表双模式主页，卡片按品牌色渐变</li>
-              <li>账号遮罩显示、点卡片进钱包式详情页，账号密码一键复制</li>
-              <li>22 个主流 App 模板、自定义卡片、分类 / 收藏 / 我的</li>
-              <li>6 位主密码锁屏、AES-256 加密存储、备份导出与剪贴板导入</li>
+              <li>首个版本：轮盘 / 列表双模式主页</li>
+              <li>账号密码遮罩显示，详情页可复制</li>
+              <li>22 个主流 App 模板</li>
+              <li>主密码锁屏、加密存储、备份导出</li>
+              <li>版本号 0.1</li>
             </ul>
           </div>
         </div>
@@ -511,11 +513,11 @@
 
         <div class="update-ver">
           <span class="uv-label">当前版本</span>
-          <span class="uv-right"><span class="uv-value" id="uvCurrent">V0.11</span></span>
+          <span class="uv-right"><span class="uv-value" id="uvCurrent">V0.12</span></span>
         </div>
         <div class="update-ver">
           <span class="uv-label">最新版本</span>
-          <span class="uv-right"><span class="uv-value fresh" id="uvLatest">V0.11</span><span class="badge-new hidden" id="uvBadge">NEW</span></span>
+          <span class="uv-right"><span class="uv-value fresh" id="uvLatest">V0.12</span><span class="badge-new hidden" id="uvBadge">NEW</span></span>
         </div>
         <p class="update-checked" id="updateChecked">未配置更新源（离线模式，仅比对安装包内版本）</p>
 
@@ -528,77 +530,114 @@
         </div>
 
         <div class="help-card" style="margin-top:16px">
-          <h4>V0.11 更新内容</h4>
+          <h4>V0.12 更新内容</h4>
           <div class="log-item">
-            <span class="log-tag current">V0.11</span>
+            <span class="log-tag current">V0.12</span>
             <ul>
-              <li>卡片与列表改用真实 App 图标（39 个品牌 + 首字占位）</li>
-              <li>卡片排版：大图标 + 名称 + 账号/密码双行带标签</li>
-              <li>版本号 0.11（iOS 0.11 / build 11，Android 0.11 / versionCode 11）</li>
+              <li>更新页版本说明精简：只写更新了什么，版本号统一写作「版本号升至 x」</li>
+              <li>版本号升至 0.12</li>
+            </ul>
+          </div>
+          <div class="log-item">
+            <span class="log-tag">V0.11</span>
+            <ul>
+              <li>卡片和列表换成真实 App 图标</li>
+              <li>卡片排版重做，账号、密码前加上标签</li>
+              <li>版本号升至 0.11</li>
             </ul>
           </div>
           <div class="log-item">
             <span class="log-tag">V0.10</span>
             <ul>
-              <li>卡片阴影改主色 + 右下单向；列表模式去阴影</li>
-              <li>更新页状态文案更明确</li>
-              <li>版本号 0.10（iOS 0.10 / build 10，Android 0.10 / versionCode 10）</li>
+              <li>卡片阴影更细腻，只向右侧和下方投射，并贴合卡片颜色</li>
+              <li>列表模式去掉黑色阴影</li>
+              <li>更新页提示改为「请及时更新」和「已是最新版本无需更新」</li>
+              <li>版本号升至 0.10</li>
             </ul>
           </div>
           <div class="log-item">
             <span class="log-tag">V0.9</span>
             <ul>
-              <li>iOS 更新检查加备用通道（Release 内 version.json），修 403</li>
-              <li>卡片阴影改为轻量投影；轮盘卡片放大</li>
-              <li>版本号 0.9（iOS 0.9 / build 9，Android 0.9 / versionCode 9）</li>
+              <li>修复 iOS 检查更新失败的问题</li>
+              <li>卡片阴影不再出现黑色方框</li>
+              <li>轮盘卡片放大</li>
+              <li>版本号升至 0.9</li>
             </ul>
           </div>
           <div class="log-item">
             <span class="log-tag">V0.8</span>
             <ul>
-              <li>Android 联网检查补权限（INTERNET / ACCESS_NETWORK_STATE）</li>
-              <li>更新页失败时显示具体原因</li>
-              <li>版本号 0.8（iOS 0.8 / build 8，Android 0.8 / versionCode 8）</li>
+              <li>修复 Android 无法检查更新的问题</li>
+              <li>检查失败时显示具体原因</li>
+              <li>版本号升至 0.8</li>
             </ul>
           </div>
           <div class="log-item">
             <span class="log-tag">V0.7</span>
             <ul>
-              <li>轮盘模式改为左轮转盘（扇形叠放 + 上下滑动切换 + 选中卡片浮起）</li>
-              <li>模式切换挪到右上角按钮；删除卡片加弹窗确认</li>
+              <li>轮盘模式改为左轮转盘，上下滑动切换</li>
+              <li>模式切换挪到右上角按钮</li>
+              <li>删除卡片加确认弹窗</li>
               <li>分类 14 类、图标 56 个</li>
-              <li>版本号升至 0.7（iOS 0.7 / build 7，Android 0.7 / versionCode 7）</li>
+              <li>版本号升至 0.7</li>
             </ul>
           </div>
           <div class="log-item">
             <span class="log-tag">V0.6</span>
             <ul>
-              <li>更新检查支持 GitHub Releases：填「用户名/仓库名」即可读最新 release 的版本号与正文</li>
-              <li>更新页会展示远端 Release 的更新说明（有新版本时才出现）</li>
-              <li>版本号解析兼容 v0.6 / 0.6 / 0.6-beta 等标签写法</li>
+              <li>支持从 GitHub 检查新版本</li>
+              <li>更新页显示新版本的更新说明</li>
               <li>版本号升至 0.6</li>
             </ul>
           </div>
           <div class="log-item">
             <span class="log-tag">V0.5</span>
             <ul>
-              <li>「版本更新」支持联网检查：配置更新源后，启动与打开更新页会拉取最新版本号</li>
-              <li>更新页新增「上次检查」状态行（未配置 / 刚刚 / x 分钟前 / 更新源不可达）</li>
-              <li>远程版本高于当前版本时显示小红点与 NEW 徽标；更新源不可达时静默降级，不影响使用</li>
-              <li>「清空全部卡片」改为居中弹窗二次确认，避免误删（取消即无操作）</li>
+              <li>支持联网检查新版本</li>
+              <li>更新页显示检查状态</li>
+              <li>清空全部卡片加确认弹窗</li>
               <li>版本号升至 0.5</li>
             </ul>
           </div>
           <div class="log-item">
             <span class="log-tag">V0.4</span>
             <ul>
-              <li>轮盘卡片进一步缩小，四周加强投影，卡片与背景分离更清楚</li>
-              <li>分类页每个分组标题加上专属配色（社交蓝 / 支付橙 / 购物红 / 影音紫 / 游戏绿 / 工具青 / 金融金）</li>
-              <li>「关于」新增「版本更新」入口，有新版本时显示小红点</li>
+              <li>轮盘卡片缩小并加阴影</li>
+              <li>分类页标题加配色标签</li>
+              <li>关于页新增版本更新入口</li>
               <li>版本号升至 0.4</li>
             </ul>
           </div>
+          <div class="log-item">
+            <span class="log-tag">V0.3</span>
+            <ul>
+              <li>卡片账号加「账号」标签</li>
+              <li>首页新增搜索</li>
+              <li>版本号升至 0.3</li>
+            </ul>
+          </div>
+          <div class="log-item">
+            <span class="log-tag">V0.2</span>
+            <ul>
+              <li>模板库改名并扩充到 67 个模板</li>
+              <li>备注提示改为「填写你的小秘密」</li>
+              <li>卡片配色新增自定义 RGB</li>
+              <li>使用手册独立成页</li>
+              <li>版本号升至 0.2</li>
+            </ul>
+          </div>
+          <div class="log-item">
+            <span class="log-tag">V0.1</span>
+            <ul>
+              <li>首个版本：轮盘 / 列表双模式主页</li>
+              <li>账号密码遮罩显示，详情页可复制</li>
+              <li>22 个主流 App 模板</li>
+              <li>主密码锁屏、加密存储、备份导出</li>
+              <li>版本号 0.1</li>
+            </ul>
+          </div>
         </div>
+
         <p class="help-foot">离线检查：本版为本地应用，版本信息随安装包发布</p>
       </div>
     </div>
