@@ -1,4 +1,4 @@
-# 密码卡包 PasswordWallet · V0.6
+﻿# 密码卡包 PasswordWallet · V0.6
 
 一个本地优先的 iOS / Android 密码卡片 App：主页用「轮盘」式卡片轮播展示各 App 的账号密码（默认遮罩），
 点开卡片进入钱包式详情页查看 / 复制明文。数据只存在本机，AES-256 加密落盘。
@@ -48,7 +48,7 @@ wsl -d Ubuntu2204 -- bash /mnt/e/DATA/Pojia/PasswordWallet/build/build_ipa.sh
 wsl -d Ubuntu2204 -- bash /mnt/e/DATA/Pojia/PasswordWallet/build/build_apk.sh
 ```
 
-## 用 GitHub 做更新监控（推荐）
+## 用 GitHub 做更新监控（已上线：checkak/passwordwallet）
 
 ```bash
 # 1. 推源码

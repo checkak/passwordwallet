@@ -1,4 +1,4 @@
-/* 密码卡包 V0.1 — 视觉层 */
+﻿/* 密码卡包 V0.1 — 视觉层 */
 :root{
   --bg:#F2F4F9;
   --ink:#0B0E14;
@@ -135,17 +135,6 @@ input{font-family:inherit}
 .c-star{position:absolute;top:12px;right:14px;font-size:14px;opacity:.9;z-index:1}
 .c--empty{background:#fff;color:#8A90A0;justify-content:center;box-shadow:var(--card-shadow)}
 
-.wheel-hint{
-  position:absolute;right:12px;top:4px;z-index:320;pointer-events:none;
-  display:flex;align-items:center;gap:6px;
-  padding:5px 11px 5px 8px;border-radius:100px;
-  background:rgba(255,255,255,.94);color:#7A8296;
-  box-shadow:0 3px 10px rgba(15,23,42,.10);
-  font-size:11.5px;font-weight:600;line-height:1;
-  transition:opacity .5s ease;
-}
-.wheel-hint-icon{font-size:12px;opacity:.9}
-.wheel-hint p{margin:0;font-size:11.5px;font-weight:600}
 .wheel-counter{
   position:absolute;left:14px;top:4px;
   font-size:11.5px;font-weight:600;color:#6B7280;background:rgba(255,255,255,.92);
@@ -461,3 +450,34 @@ input{font-family:inherit}
 .dialog-btn + .dialog-btn{border-left:.5px solid #E3E6EE}
 .dialog-btn.danger{color:var(--danger);font-weight:700}
 .dialog-btn:active{background:rgba(10,132,255,.07)}
+
+/* ---------- 左轮转盘（V0.7） ---------- */
+.wheel-view{position:absolute;inset:0;overflow:hidden;touch-action:none}
+.wheel-track{position:absolute;inset:0}
+.card.wheel-card{
+  position:absolute;left:14px;top:0;margin:0;width:calc(100% - 128px);height:108px;
+  border-radius:20px;padding:12px 14px;transform-origin:left center;
+  transition:transform .36s cubic-bezier(.25,.9,.25,1),opacity .3s ease,box-shadow .3s ease;
+  box-shadow:0 18px 32px -14px rgba(15,23,42,.50), 0 6px 14px rgba(15,23,42,.14),
+             inset 0 1px 0 rgba(255,255,255,.18);
+}
+.card.wheel-card.is-active{
+  box-shadow:0 24px 44px -14px rgba(15,23,42,.55), 0 10px 20px rgba(15,23,42,.18),
+             inset 0 1px 0 rgba(255,255,255,.26);
+}
+.card.wheel-card .c-icon{width:46px;height:46px;border-radius:14px;font-size:23px}
+.card.wheel-card .c-name{font-size:16px}
+.card.wheel-card .c-tag{display:none}
+.card.wheel-card .c-account,.card.wheel-card .c-row .pw{font-size:11.5px}
+
+.wheel-dots{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);
+  display:flex;align-items:center;gap:6px;z-index:5}
+.wheel-dots i{width:6px;height:6px;border-radius:50%;background:#CBD2DF;transition:all .25s ease}
+.wheel-dots i.on{background:var(--blue);width:16px;border-radius:100px}
+
+.wheel-hint{
+  position:absolute;right:10px;top:38%;transform:translateY(-50%);
+  text-align:center;color:#9AA2B4;z-index:1;pointer-events:none;transition:opacity .5s ease;
+}
+.wheel-hint-icon{font-size:26px;opacity:.85;margin-bottom:10px}
+.wheel-hint p{margin:0;font-size:12px;line-height:1.6;font-weight:500}

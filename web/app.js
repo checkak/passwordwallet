@@ -1,4 +1,4 @@
-/* 密码卡包 V0.1 — 应用逻辑层
+﻿/* 密码卡包 V0.1 — 应用逻辑层
  * 原生壳（iOS IPA）通过 window.webkit.messageHandlers.vaultBridge 提供加密存储与剪贴板；
  * 浏览器直接打开时自动降级到 localStorage，便于本地预览与调试。
  */
@@ -78,7 +78,8 @@
   /* ============================================================
    * 2. 静态数据
    * ========================================================== */
-  const CATEGORIES = ['社交', '支付', '购物', '影音', '游戏', '工具', '金融', '其他'];
+  const CATEGORIES = ['社交', '支付', '购物', '影音', '游戏', '工具', '金融',
+                      '工作', '学习', '出行', '医疗', '邮箱', '生活', '其他'];
 
   /* 分类配色（分类页标题标签用） */
   const CAT_COLORS = {
@@ -86,14 +87,20 @@
     '支付': '#FF9500',
     '购物': '#FF3B30',
     '影音': '#AF52DE',
-    '游戏': '#30C259',
+    '游戏': '#34C759',
     '工具': '#00A7C4',
     '金融': '#D9A400',
+    '工作': '#5E5CE6',
+    '学习': '#FF2D55',
+    '出行': '#00C7BE',
+    '医疗': '#FF6482',
+    '邮箱': '#4B6A88',
+    '生活': '#8E7CC3',
     '其他': '#8A90A0'
   };
 
   /* 版本更新：随包发布的“最新版本”，用于小红点与更新页 */
-  const LATEST_VERSION = '0.6';
+  const LATEST_VERSION = '0.7';
 
   /* 联网检查地址（二选一，留空 = 关闭联网检查）。
      A. GitHub Releases 推荐：填 '用户名/仓库名'，例 'cheng/passwordwallet'
@@ -117,9 +124,14 @@
     ['#5C6B8A', '#2B3245']
   ];
 
-  const GLYPHS = ['💬', '💰', '🐧', '🎮', '🛒', '📧', '📺', '🎧', '🌐', '📕',
-                  '🚄', '🏦', '🍎', '🔍', '📌', '☁️', '❓', '📱',
-                  '🎬', '🍔', '✈️', '🏥', '📚', '🎓', '👤', '💳', '🔑', '🎨'];
+  const GLYPHS = [
+    '💬', '💰', '🐧', '🎮', '🛒', '📧', '📺', '🎧', '🌐', '📕',
+    '🚄', '🏦', '🍎', '🔍', '📌', '☁️', '❓', '📱', '🎬', '🍔',
+    '✈️', '🏥', '📚', '🎓', '👤', '💳', '🔑', '🎨', '🚗', '🚕',
+    '🏠', '🛡️', '🎫', '🎟️', '📦', '🔒', '🧾', '💼', '📊', '🗓️',
+    '🎵', '📷', '⚽', '🎯', '🎁', '🧩', '🪟', '☕', '🍜', '🎙️',
+    '📖', '💎', '🧠', '🏋️', '🛠️', '🔔'
+  ];
 
   const TEMPLATES = [
     { name: '微信', glyph: '💬', color: ['#3ED46B', '#08A03F'], cat: '社交', hint: '手机号 / 微信号' },
@@ -422,53 +434,136 @@
         '</div>' +
       '</div>' +
       (card.favorite ? '<div class="c-star">★</div>' : '');
-    node.addEventListener('click', () => { haptic('light'); openDetail(card.id); });
+    node.dataset.index = String(index);
+    node.addEventListener('click', () => {
+      if (suppressWheelClick) return;          // 刚滑动过，交给手势处理
+      const idx = Number(node.dataset.index);
+      if (idx === wheelActive) { haptic('light'); openDetail(card.id); }
+      else { setWheelActive(idx); }
+    });
     return node;
   }
 
-  function renderWheel() {
-    const track = $('wheelTrack');
-    track.innerHTML = '';
-    const cards = visibleCards();
-    cards.forEach((c, i) => track.appendChild(cardNode(c, i)));
-    $('wheelCounter').textContent = cards.length ? ('1 / ' + cards.length) : '0 / 0';
-    requestAnimationFrame(() => {
-      updateWheel();
-      const first = track.firstElementChild;
-      if (first) first.scrollIntoView({ block: 'center' });
-    });
-  }
+  /* ---------- 左轮转盘（V0.7） ---------- */
+  let wheelActive = 0;
+  let hintHidden = false;
+  let suppressWheelClick = false;
 
-  function updateWheel() {
-    const wrap = $('wheelView');
-    const track = $('wheelTrack');
-    if (!wrap || !wrap.clientHeight) return;
-    // 用布局坐标（offsetTop）而不是 getBoundingClientRect：
-    // 后者包含自身 transform，会在连续帧里自我放大。
-    const base = track.offsetTop;
-    const center = wrap.scrollTop + wrap.clientHeight / 2;
-    const cards = Array.prototype.slice.call(track.children);
-    let bestIdx = 0, bestDist = Infinity;
-    cards.forEach((node, i) => {
-      const d = (base + node.offsetTop + node.offsetHeight / 2) - center;
-      const ad = Math.abs(d);
-      if (ad < bestDist) { bestDist = ad; bestIdx = i; }
-      const t = Math.min(ad / (wrap.clientHeight * 0.55), 1) * 0.72;
-      node.style.transform =
-        'translateX(' + (-50 * t).toFixed(1) + 'px) rotateY(' +
-        (d > 0 ? 8 * t : -6 * t).toFixed(2) + 'deg) scale(' + (1 - 0.06 * t).toFixed(3) + ')';
-      node.style.opacity = (1 - 0.26 * t).toFixed(3);
-      node.style.zIndex = String(200 - Math.round(t * 80));
-    });
-    if (cards.length) $('wheelCounter').textContent = (bestIdx + 1) + ' / ' + cards.length;
-  }
-
-  let wheelRaf = null;
-  function onWheelScroll() {
+  function hideWheelHint() {
+    if (hintHidden) return;
+    hintHidden = true;
     const hint = $('wheelHint');
-    if (hint && hint.style.opacity !== '0') hint.style.opacity = '0';
-    if (wheelRaf) return;
-    wheelRaf = requestAnimationFrame(() => { wheelRaf = null; updateWheel(); });
+    if (hint) hint.style.opacity = '0';
+  }
+
+  function renderDots(total) {
+    const box = $('wheelDots');
+    box.innerHTML = '';
+    for (let i = 0; i < total; i++) {
+      const dot = document.createElement('i');
+      if (i === wheelActive) dot.className = 'on';
+      box.appendChild(dot);
+    }
+  }
+
+  function layoutWheel() {
+    const stage = $('wheelTrack');
+    if (!stage) return;
+    const cards = Array.prototype.slice.call(stage.children);
+    if (!cards.length) return;
+    const h = stage.clientHeight || 520;
+    const cardH = cards[0].offsetHeight || 108;
+    const n = cards.length;
+
+    // 卡片扇形间距：张数多时自动压缩
+    const pitch = Math.max(76, Math.min(108, (h - cardH - 40) / Math.max(1, n - 1)));
+    const totalSpan = (n - 1) * pitch + cardH;
+    // 选中卡片锚在容器 40% 高度处（偏上，给右侧提示留白）
+    const anchor = Math.round(h * 0.32);
+    const centerY = anchor;                    // 选中卡片中心
+    const shift = -wheelActive * pitch;        // 让选中卡片落在锚点
+
+    cards.forEach((node, i) => {
+      const d = i - wheelActive;
+      const ad = Math.abs(d);
+      const baseY = centerY + i * pitch + shift;
+      const ty = Math.max(-cardH, baseY - cardH / 2);   // 越界后裁掉
+      const tx = Math.min(26, ad * 8);         // 越远越往右探出（左轮扇形）
+      const rot = Math.min(4.5, ad * 1.6);     // 轻微倾斜
+      const sc = d === 0 ? 1.03 : 1 - Math.min(ad, 4) * 0.028;
+      const op = ad > 4 ? 0 : Math.max(0.28, 1 - ad * 0.16);
+
+      node.style.transform = 'translate(' + tx + 'px, ' + ty + 'px) rotate(' + rot + 'deg) scale(' + sc.toFixed(3) + ')';
+      node.style.opacity = op.toFixed(2);
+      node.style.zIndex = String(200 - ad);
+      node.classList.toggle('is-active', d === 0);
+      node.style.pointerEvents = ad > 4 ? 'none' : 'auto';
+    });
+
+    Array.prototype.forEach.call($('wheelDots').children, (dot, i) => {
+      dot.classList.toggle('on', i === wheelActive);
+    });
+  }
+
+  function setWheelActive(i, silent) {
+    const total = $('wheelTrack').children.length;
+    if (!total) return;
+    const next = Math.max(0, Math.min(total - 1, i));
+    if (next === wheelActive) return;
+    wheelActive = next;
+    layoutWheel();
+    hideWheelHint();
+    if (!silent) haptic('light');
+  }
+
+  function renderWheel() {
+    const stage = $('wheelTrack');
+    stage.innerHTML = '';
+    const cards = visibleCards();
+    cards.forEach((c, i) => {
+      const node = cardNode(c, i);
+      node.classList.add('wheel-card');
+      stage.appendChild(node);
+    });
+    if (wheelActive > cards.length - 1) wheelActive = Math.max(0, cards.length - 1);
+    renderDots(cards.length);
+    requestAnimationFrame(layoutWheel);
+  }
+
+  /* 手势：上滑看下一张、下滑回上一张；桌面端支持滚轮与方向键 */
+  function bindWheelGestures() {
+    const view = $('wheelView');
+    let drag = null;
+
+    view.addEventListener('pointerdown', (e) => { drag = { y: e.clientY, fired: false }; });
+    view.addEventListener('pointermove', (e) => {
+      if (!drag || drag.fired) return;
+      const dy = e.clientY - drag.y;
+      if (Math.abs(dy) >= 34) {
+        drag.fired = true;                     // 一次拖动只切一张
+        suppressWheelClick = true;
+        setTimeout(() => { suppressWheelClick = false; }, 400);
+        setWheelActive(wheelActive + (dy < 0 ? 1 : -1));
+      }
+    });
+    ['pointerup', 'pointercancel', 'pointerleave'].forEach(ev =>
+      view.addEventListener(ev, () => { drag = null; }));
+
+    let wheelLock = 0;
+    view.addEventListener('wheel', (e) => {
+      if (Math.abs(e.deltaY) < 6) return;
+      e.preventDefault();
+      const now = Date.now();
+      if (now - wheelLock < 260) return;       // 滚轮节流
+      wheelLock = now;
+      setWheelActive(wheelActive + (e.deltaY > 0 ? 1 : -1));
+    }, { passive: false });
+
+    document.addEventListener('keydown', (e) => {
+      if (currentTab !== 'home' || state.settings.mode !== 'wheel') return;
+      if (e.key === 'ArrowDown') setWheelActive(wheelActive + 1);
+      if (e.key === 'ArrowUp') setWheelActive(wheelActive - 1);
+    });
   }
 
   function rowNode(card) {
@@ -509,14 +604,14 @@
       wrap.style.display = 'none';
       $('wheelTrack').innerHTML = '';
       $('listTrack').innerHTML = '';
-      $('wheelCounter').textContent = '0 / 0';
+      renderDots(0);
     } else if (!shown.length) {
       empty.classList.add('hidden');
       searchEmpty.classList.remove('hidden');
       wrap.style.display = 'none';
       $('wheelTrack').innerHTML = '';
       $('listTrack').innerHTML = '';
-      $('wheelCounter').textContent = '0 / 0';
+      renderDots(0);
     } else {
       empty.classList.add('hidden');
       searchEmpty.classList.add('hidden');
@@ -529,15 +624,20 @@
     $('banner').classList.toggle('hidden', !!state.settings.hideBanner);
   }
 
+  const MODE_ICONS = {
+    list: '<svg viewBox="0 0 24 24" width="21" height="21"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+    wheel: '<svg viewBox="0 0 24 24" width="21" height="21"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/></svg>'
+  };
+
   function setMode(mode, silent) {
     state.settings.mode = mode;
-    Array.prototype.forEach.call($('modeSwitch').children, (b) => {
-      b.classList.toggle('active', b.dataset.mode === mode);
-    });
     $('wheelView').classList.toggle('hidden', mode !== 'wheel');
     $('listView').classList.toggle('hidden', mode !== 'list');
+    // 按钮显示的是「切过去的模式」
+    $('btnModeLabel').textContent = mode === 'wheel' ? '列表' : '轮盘';
+    $('btnModeIcon').innerHTML = mode === 'wheel' ? MODE_ICONS.list : MODE_ICONS.wheel;
     if (!silent) { haptic('light'); persist(); }
-    if (mode === 'wheel') requestAnimationFrame(updateWheel);
+    if (mode === 'wheel') requestAnimationFrame(layoutWheel);
   }
 
   /* ============================================================
@@ -904,27 +1004,21 @@
       openEditor(card);
     });
 
-    let deleteArmed = false, deleteTimer = null;
     $('detailDelete').addEventListener('click', async () => {
       const card = currentDetailCard();
       if (!card) return;
-      const btn = $('detailDelete');
-      if (!deleteArmed) {
-        deleteArmed = true;
-        btn.textContent = '再次点击确认删除';
-        deleteTimer = setTimeout(() => {
-          deleteArmed = false;
-          btn.textContent = '🗑 删除';
-        }, 3000);
-        return;
-      }
-      clearTimeout(deleteTimer);
-      deleteArmed = false;
-      btn.textContent = '🗑 删除';
+      const ok = await confirmDialog({
+        title: '删除这张卡片',
+        message: '将删除「' + card.name + '」，删除后无法恢复。\n如果只是想暂时收起，可以改为取消收藏。',
+        confirmText: '删除',
+        danger: true
+      });
+      if (!ok) return;
       state.cards = state.cards.filter(c => c.id !== card.id);
       await persist();
       closeOverlay('detailOverlay');
       renderAll();
+      haptic('medium');
       toast('已删除「' + card.name + '」');
     });
   }
@@ -1441,7 +1535,7 @@
     currentTab = tab;
     Object.keys(PAGES).forEach(k => $(PAGES[k]).classList.toggle('hidden', k !== tab));
     Array.prototype.forEach.call($('tabbar').children, b => b.classList.toggle('active', b.dataset.tab === tab));
-    if (tab === 'home') requestAnimationFrame(updateWheel);
+    if (tab === 'home') requestAnimationFrame(layoutWheel);
     if (tab === 'category') renderCategory();
     if (tab === 'fav') renderFav();
     if (tab === 'me') renderMe();
@@ -1461,8 +1555,10 @@
       openOverlay('templateOverlay');
     });
 
-    Array.prototype.forEach.call($('modeSwitch').children, b => {
-      b.addEventListener('click', () => setMode(b.dataset.mode));
+    $('btnMode').addEventListener('click', () => {
+      const next = (state.settings.mode === 'wheel') ? 'list' : 'wheel';
+      setMode(next);
+      toast(next === 'wheel' ? '已切换到轮盘模式' : '已切换到列表模式');
     });
 
     $('bannerClose').addEventListener('click', () => {
@@ -1471,7 +1567,7 @@
       persist();
     });
 
-    $('wheelView').addEventListener('scroll', onWheelScroll, { passive: true });
+    bindWheelGestures();
 
     /* 首页搜索 */
     let searchTimer = null;
@@ -1496,7 +1592,7 @@
       haptic('light');
     });
 
-    window.addEventListener('resize', () => requestAnimationFrame(updateWheel));
+    window.addEventListener('resize', () => requestAnimationFrame(layoutWheel));
   }
 
   onAppEvent = function (name) {

@@ -258,7 +258,7 @@
         request.cachePolicy = NSURLRequestReloadIgnoringLocalCacheData;
         [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
         [request setValue:@"application/vnd.github+json" forHTTPHeaderField:@"Accept-GitHub"];
-        [request setValue:@"PasswordWallet/0.6 (iOS)" forHTTPHeaderField:@"User-Agent"];
+        [request setValue:@"PasswordWallet/0.7 (iOS)" forHTTPHeaderField:@"User-Agent"];
         NSURLSessionDataTask *task = [[NSURLSession sharedSession] dataTaskWithRequest:request
             completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             if (error || !data) {

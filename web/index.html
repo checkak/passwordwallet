@@ -32,6 +32,12 @@
     <header class="app-header">
       <h1 class="app-title">密码卡包</h1>
       <div class="header-actions">
+        <button class="hbtn" id="btnMode">
+          <span class="hbtn-icon" id="btnModeIcon">
+            <svg viewBox="0 0 24 24" width="21" height="21"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </span>
+          <span class="hbtn-label" id="btnModeLabel">列表</span>
+        </button>
         <button class="hbtn" id="btnTemplates">
           <span class="hbtn-icon">
             <svg viewBox="0 0 24 24" width="21" height="21"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" rx="2"/></svg>
@@ -66,19 +72,15 @@
         <div class="banner-art">🔐</div>
       </div>
 
-      <div class="mode-switch" id="modeSwitch">
-        <button data-mode="wheel" class="active">轮盘模式</button>
-        <button data-mode="list">列表模式</button>
-      </div>
-
       <div class="view-wrap">
         <div class="wheel-view" id="wheelView">
           <div class="wheel-track" id="wheelTrack"></div>
           <div class="wheel-hint" id="wheelHint">
             <div class="wheel-hint-icon">🔒</div>
-            <p>上滑切换</p>
+            <p>上滑或下滑<br>切换卡片</p>
           </div>
-          <div class="wheel-counter" id="wheelCounter">1 / 1</div>
+          <div class="wheel-dots" id="wheelDots"></div>
+          <div class="wheel-counter hidden" id="wheelCounter">1 / 1</div>
         </div>
 
         <div class="list-view hidden" id="listView">
@@ -143,7 +145,7 @@
         <div class="group-title">关于</div>
         <div class="setting-row" id="rowHelp"><div class="sr-main"><span class="sr-icon">📖</span><span>使用手册</span></div><span class="chev">›</span></div>
         <div class="setting-row" id="rowUpdate"><div class="sr-main"><span class="sr-icon">🔄</span><span>版本更新</span><i class="red-dot hidden" id="updateDot"></i></div><span class="sr-value" id="updateState">已是最新</span></div>
-        <div class="setting-row"><div class="sr-main"><span class="sr-icon">💡</span><span>版本</span></div><span class="sr-value" id="appVersion">V0.6</span></div>
+        <div class="setting-row"><div class="sr-main"><span class="sr-icon">💡</span><span>版本</span></div><span class="sr-value" id="appVersion">V0.7</span></div>
         <div class="setting-row"><div class="sr-main"><span class="sr-icon">✍️</span><span>作者</span></div><span class="sr-value author">不愿透露姓名的程同学@2026</span></div>
       </div>
     </main>
@@ -337,7 +339,7 @@
           <div class="help-hero-icon">📖</div>
           <div class="help-hero-body">
             <div class="help-hero-title">使用手册</div>
-            <div class="help-hero-sub">V0.6 · 操作方法与版本记录</div>
+            <div class="help-hero-sub">V0.7 · 操作方法与版本记录</div>
           </div>
         </div>
 
@@ -362,7 +364,7 @@
             </li>
             <li>
               <b>自定义卡片</b>
-              <span>右上「＋」新建：密码可点「生成」得到 16 位强密码；图标 28 选 1；配色 10 套预设，或点彩色圆点自己拖 RGB。</span>
+              <span>右上「＋」新建：密码可点「生成」得到 16 位强密码；图标 56 选 1、分类 14 类；配色 10 套预设，或点彩色圆点自己拖 RGB。</span>
             </li>
             <li>
               <b>分类与收藏</b>
@@ -382,7 +384,17 @@
         <div class="help-card">
           <h4>版本更新</h4>
           <div class="log-item">
-            <span class="log-tag current">V0.6</span>
+            <span class="log-tag current">V0.7</span>
+            <ul>
+              <li>轮盘模式重做为「左轮转盘」：卡片扇形叠放，上滑 / 下滑切换，选中卡放大浮起</li>
+              <li>模式切换改为右上角按钮，与模板库、添加并排；去掉页面里的分段开关</li>
+              <li>删除卡片改为弹窗二次确认（清空全部卡片同样如此）</li>
+              <li>分类扩到 14 类、图标扩到 56 个</li>
+              <li>版本号升至 0.7</li>
+            </ul>
+          </div>
+          <div class="log-item">
+            <span class="log-tag">V0.6</span>
             <ul>
               <li>版本更新接入 GitHub Releases：配置「用户名/仓库名」后读取最新 release</li>
               <li>更新页展示远端更新说明，版本号支持 v0.6 / 0.6 / 0.6-beta 写法</li>
@@ -464,11 +476,11 @@
 
         <div class="update-ver">
           <span class="uv-label">当前版本</span>
-          <span class="uv-right"><span class="uv-value" id="uvCurrent">V0.6</span></span>
+          <span class="uv-right"><span class="uv-value" id="uvCurrent">V0.7</span></span>
         </div>
         <div class="update-ver">
           <span class="uv-label">最新版本</span>
-          <span class="uv-right"><span class="uv-value fresh" id="uvLatest">V0.6</span><span class="badge-new hidden" id="uvBadge">NEW</span></span>
+          <span class="uv-right"><span class="uv-value fresh" id="uvLatest">V0.7</span><span class="badge-new hidden" id="uvBadge">NEW</span></span>
         </div>
         <p class="update-checked" id="updateChecked">未配置更新源（离线模式，仅比对安装包内版本）</p>
 
@@ -481,9 +493,18 @@
         </div>
 
         <div class="help-card" style="margin-top:16px">
-          <h4>V0.6 更新内容</h4>
+          <h4>V0.7 更新内容</h4>
           <div class="log-item">
-            <span class="log-tag current">V0.6</span>
+            <span class="log-tag current">V0.7</span>
+            <ul>
+              <li>轮盘模式改为左轮转盘（扇形叠放 + 上下滑动切换 + 选中卡片浮起）</li>
+              <li>模式切换挪到右上角按钮；删除卡片加弹窗确认</li>
+              <li>分类 14 类、图标 56 个</li>
+              <li>版本号升至 0.7（iOS 0.7 / build 7，Android 0.7 / versionCode 7）</li>
+            </ul>
+          </div>
+          <div class="log-item">
+            <span class="log-tag">V0.6</span>
             <ul>
               <li>更新检查支持 GitHub Releases：填「用户名/仓库名」即可读最新 release 的版本号与正文</li>
               <li>更新页会展示远端 Release 的更新说明（有新版本时才出现）</li>

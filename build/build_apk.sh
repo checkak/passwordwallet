@@ -9,7 +9,7 @@ export PATH="$JAVA_HOME/bin:$PATH"
 BT="$AND/sdk/build-tools/34.0.0"
 AJAR="$AND/sdk/platforms/android-34/android.jar"
 OUT="$SRC/build/apk"
-APK_OUT="$SRC/build/密码卡包-V0.6.apk"
+APK_OUT="$SRC/build/密码卡包-V0.7.apk"
 KEYSTORE="$SRC/build/android/keystore.jks"
 
 [ -x "$BT/aapt2" ] || { echo "缺少 build-tools：先跑 _tools/setup_android.sh"; exit 1; }

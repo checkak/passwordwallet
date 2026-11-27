@@ -13,3 +13,6 @@ Thumbs.db
 # 依赖（本项目无，占位）
 node_modules/
 __pycache__/
+
+# apksigner 附属文件
+*.idsig
