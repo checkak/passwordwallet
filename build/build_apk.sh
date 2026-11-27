@@ -9,7 +9,7 @@ export PATH="$JAVA_HOME/bin:$PATH"
 BT="$AND/sdk/build-tools/34.0.0"
 AJAR="$AND/sdk/platforms/android-34/android.jar"
 OUT="$SRC/build/apk"
-APK_OUT="$SRC/build/密码卡包-V0.10.apk"
+APK_OUT="$SRC/build/密码卡包-V0.11.apk"
 KEYSTORE="$SRC/build/android/keystore.jks"
 
 [ -x "$BT/aapt2" ] || { echo "缺少 build-tools：先跑 _tools/setup_android.sh"; exit 1; }
@@ -19,7 +19,7 @@ rm -rf "$OUT"
 mkdir -p "$OUT"/{assets/web,compiled,classes,gen}
 
 echo "== 1/7 收集前端资源 =="
-cp "$SRC"/web/index.html "$SRC"/web/style.css "$SRC"/web/app.js "$OUT/assets/web/"
+cp "$SRC"/web/*.html "$SRC"/web/*.css "$SRC"/web/*.js "$OUT/assets/web/"
 
 echo "== 2/7 编译资源 =="
 "$BT/aapt2" compile --dir "$SRC/android/res" -o "$OUT/compiled/res.zip"

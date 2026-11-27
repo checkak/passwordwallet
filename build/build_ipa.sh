@@ -1,5 +1,5 @@
 ﻿#!/usr/bin/env bash
-# 密码卡包 V0.10 — 无 Xcode 构建 IPA（WSL: clang-14 + ld64.lld + iPhoneOS16.5.sdk）
+# 密码卡包 V0.11 — 无 Xcode 构建 IPA（WSL: clang-14 + ld64.lld + iPhoneOS16.5.sdk）
 set -euo pipefail
 
 SRC=/mnt/e/DATA/Pojia/PasswordWallet
@@ -39,7 +39,7 @@ chmod 755 "$BUNDLE/$APPNAME"
 echo "== 3/4 组装 App Bundle =="
 cp "$SRC/native/Info.plist" "$BUNDLE/Info.plist"
 mkdir -p "$BUNDLE/web"
-cp "$SRC"/web/index.html "$SRC"/web/style.css "$SRC"/web/app.js "$BUNDLE/web/"
+cp "$SRC"/web/*.html "$SRC"/web/*.css "$SRC"/web/*.js "$BUNDLE/web/"
 for icon in AppIcon60x60@2x.png AppIcon60x60@3x.png AppIcon76x76@2x.png; do
   cp "$SRC/assets/icons/$icon" "$BUNDLE/$icon"
 done
@@ -47,11 +47,11 @@ printf 'APPL????' > "$BUNDLE/PkgInfo"
 
 echo "== 4/4 打包 IPA =="
 cd "$OUT"
-zip -qry "$SRC/build/$APPNAME-V0.10.ipa" Payload
+zip -qry "$SRC/build/$APPNAME-V0.11.ipa" Payload
 cd "$SRC/build"
 
 echo "--- 产物 ---"
-ls -lh "$SRC/build/$APPNAME-V0.10.ipa"
+ls -lh "$SRC/build/$APPNAME-V0.11.ipa"
 file "$BUNDLE/$APPNAME"
-sha256sum "$SRC/build/$APPNAME-V0.10.ipa"
+sha256sum "$SRC/build/$APPNAME-V0.11.ipa"
 echo "BUILD_OK"

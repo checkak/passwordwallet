@@ -100,7 +100,7 @@
   };
 
   /* 版本更新：随包发布的“最新版本”，用于小红点与更新页 */
-  const LATEST_VERSION = '0.10';
+  const LATEST_VERSION = '0.11';
 
   /* 联网检查地址（二选一，留空 = 关闭联网检查）。
      A. GitHub Releases 推荐：填 '用户名/仓库名'，例 'cheng/passwordwallet'
@@ -413,6 +413,24 @@
   /* ============================================================
    * 6. 首页渲染
    * ========================================================== */
+  /* 卡片图标：优先用品牌 SVG（Simple Icons），没有就用首字/缩写做占位图标 */
+  function brandPathOf(card) {
+    const map = window.BRAND_ICONS || {};
+    return map[card.brand || card.name] || '';
+  }
+
+  function iconHTML(card) {
+    const path = brandPathOf(card);
+    if (path) {
+      return '<div class="c-icon brand">' +
+        '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + path + '"/></svg>' +
+        '</div>';
+    }
+    const name = String(card.name || '').trim();
+    const letter = /^[\x00-\x7F]/.test(name) ? name.slice(0, 2) : name.slice(0, 1);
+    return '<div class="c-icon"><span class="c-letter">' + esc(letter || '🔑') + '</span></div>';
+  }
+
   function cardNode(card, index) {
     const node = document.createElement('button');
     node.className = 'card';
@@ -421,8 +439,9 @@
     // 阴影取卡片主色（深色端），只往右下投，避免灰色/黑色暗框
     const base = hexToRgb((card.color && card.color[1]) || '#0B5FE0');
     node.style.setProperty('--sh', 'rgba(' + base.r + ',' + base.g + ',' + base.b + ',.42)');
+    node.style.setProperty('--brand', (card.color && card.color[1]) || '#0B5FE0');
     node.innerHTML =
-      '<div class="c-icon">' + esc(card.glyph || '🔑') + '</div>' +
+      iconHTML(card) +
       '<div class="c-main">' +
         '<div class="c-name">' + esc(card.name) + '</div>' +
         '<div class="c-line">' +
@@ -569,12 +588,24 @@
     });
   }
 
+  function rowIconHTML(card) {
+    const path = brandPathOf(card);
+    const brand = (card.color && card.color[1]) || '#0B5FE0';
+    if (path) {
+      return '<div class="row-icon brand" style="--brand:' + brand + '">' +
+        '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + path + '"/></svg></div>';
+    }
+    const name = String(card.name || '').trim();
+    const letter = /^[\x00-\x7F]/.test(name) ? name.slice(0, 2) : name.slice(0, 1);
+    return '<div class="row-icon" style="background:' + grad(card.color) + ';color:#fff">' +
+      esc(letter || card.glyph || '🔑') + '</div>';
+  }
+
   function rowNode(card) {
     const row = document.createElement('button');
     row.className = 'row';
     row.innerHTML =
-      '<div class="row-icon" style="background:' + grad(card.color) + ';color:#fff">' +
-        esc(card.glyph || '🔑') + '</div>' +
+      rowIconHTML(card) +
       '<div class="row-main">' +
         '<div class="row-name">' + esc(card.name) + '</div>' +
         '<div class="row-sub">' + esc(maskAccount(card.account)) + '</div>' +
@@ -677,8 +708,7 @@
         const row = document.createElement('button');
         row.className = 'cat-item';
         row.innerHTML =
-          '<div class="row-icon" style="background:' + grad(c.color) + ';color:#fff">' +
-            esc(c.glyph || '🔑') + '</div>' +
+          rowIconHTML(c) +
           '<div class="row-main"><div class="row-name">' + esc(c.name) + '</div>' +
           '<div class="row-sub">' + esc(maskAccount(c.account)) + '</div></div>' +
           '<span class="row-chev">›</span>';
