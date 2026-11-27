@@ -100,7 +100,7 @@
   };
 
   /* 版本更新：随包发布的“最新版本”，用于小红点与更新页 */
-  const LATEST_VERSION = '0.9';
+  const LATEST_VERSION = '0.10';
 
   /* 联网检查地址（二选一，留空 = 关闭联网检查）。
      A. GitHub Releases 推荐：填 '用户名/仓库名'，例 'cheng/passwordwallet'
@@ -418,6 +418,9 @@
     node.className = 'card';
     node.dataset.id = card.id;
     node.style.background = grad(card.color);
+    // 阴影取卡片主色（深色端），只往右下投，避免灰色/黑色暗框
+    const base = hexToRgb((card.color && card.color[1]) || '#0B5FE0');
+    node.style.setProperty('--sh', 'rgba(' + base.r + ',' + base.g + ',' + base.b + ',.42)');
     node.innerHTML =
       '<div class="c-icon">' + esc(card.glyph || '🔑') + '</div>' +
       '<div class="c-main">' +
@@ -803,12 +806,19 @@
     const mins = Math.max(0, Math.round((Date.now() - at) / 60000));
     const when = mins < 1 ? '刚刚' : (mins < 60 ? mins + ' 分钟前' : Math.round(mins / 60) + ' 小时前');
     const src = mode === 'github' ? 'GitHub Releases' : '更新源';
+
     if (state.settings.lastCheckOk) {
-      node.textContent = '上次检查：' + when + ' · ' + src + ' 正常';
-    } else {
-      const reason = String(state.settings.lastCheckError || '').slice(0, 40);
-      node.textContent = '上次检查：' + when + ' · ' + src + ' 不可达' + (reason ? '（' + reason + '）' : '');
+      const current = appVersionText();
+      const latest = latestVersion();
+      if (versionGt(latest, current)) {
+        node.textContent = '最新版本 V' + latest + '，当前版本 V' + current + '，请及时更新！';
+      } else {
+        node.textContent = '已是最新版本无需更新~';
+      }
+      return;
     }
+    const reason = String(state.settings.lastCheckError || '').slice(0, 40);
+    node.textContent = '上次检查：' + when + ' · ' + src + ' 不可达' + (reason ? '（' + reason + '）' : '');
   }
 
   /* 远程更新说明（有新版本时展示 Release 正文） */

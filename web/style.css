@@ -1,4 +1,4 @@
-﻿/* 密码卡包 V0.1 — 视觉层 */
+/* 密码卡包 V0.1 — 视觉层 */
 :root{
   --bg:#F2F4F9;
   --ink:#0B0E14;
@@ -106,7 +106,9 @@ input{font-family:inherit}
   position:relative;height:116px;margin:6px 14px;border-radius:19px;padding:12px 14px;
   display:flex;align-items:center;gap:11px;color:#fff;overflow:hidden;text-align:left;
   transform-origin:left center;
-  box-shadow:0 5px 14px rgba(15,23,42,.14), 0 1px 3px rgba(15,23,42,.08);
+  /* 阴影只用卡片自身主色，且偏右下——左侧不投影 */
+  box-shadow:7px 9px 20px -8px var(--sh, rgba(15,23,42,.22)),
+             2px 3px 7px -3px var(--sh, rgba(15,23,42,.16));
   transition:box-shadow .2s ease;
 }
 .card::after{
@@ -144,7 +146,7 @@ input{font-family:inherit}
 .list-track{display:flex;flex-direction:column;gap:10px}
 .row{
   display:flex;align-items:center;gap:13px;background:#fff;border-radius:19px;padding:12px 14px;
-  box-shadow:var(--card-shadow);transition:transform .14s ease;text-align:left;
+  border:.5px solid rgba(15,23,42,.07);box-shadow:none;transition:transform .14s ease;text-align:left;
 }
 .row:active{transform:scale(.985)}
 .row-icon{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font-size:23px;flex:0 0 auto;
@@ -456,10 +458,12 @@ input{font-family:inherit}
   position:absolute;left:14px;top:0;margin:0;width:calc(100% - 40px);height:128px;
   border-radius:22px;padding:14px 16px;transform-origin:left center;
   transition:transform .36s cubic-bezier(.25,.9,.25,1),opacity .3s ease,box-shadow .3s ease;
-  box-shadow:0 6px 16px rgba(15,23,42,.16), 0 1px 4px rgba(15,23,42,.10);
+  box-shadow:8px 10px 22px -8px var(--sh, rgba(15,23,42,.22)),
+             2px 4px 8px -3px var(--sh, rgba(15,23,42,.16));
 }
 .card.wheel-card.is-active{
-  box-shadow:0 10px 24px rgba(15,23,42,.22), 0 2px 6px rgba(15,23,42,.12);
+  box-shadow:10px 14px 28px -8px var(--sh, rgba(15,23,42,.26)),
+             3px 5px 10px -3px var(--sh, rgba(15,23,42,.18));
 }
 .card.wheel-card .c-icon{width:54px;height:54px;border-radius:16px;font-size:27px}
 .card.wheel-card .c-name{font-size:18px}
