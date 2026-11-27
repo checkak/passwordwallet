@@ -100,7 +100,7 @@
   };
 
   /* 版本更新：随包发布的“最新版本”，用于小红点与更新页 */
-  const LATEST_VERSION = '0.12';
+  const LATEST_VERSION = '1.2';
 
   /* 联网检查地址（二选一，留空 = 关闭联网检查）。
      A. GitHub Releases 推荐：填 '用户名/仓库名'，例 'cheng/passwordwallet'
@@ -413,6 +413,13 @@
   /* ============================================================
    * 6. 首页渲染
    * ========================================================== */
+  /* 在给定底色上取对比色（浅底用深字，深底用白字） */
+  function contrastOn(hex) {
+    const c = hexToRgb(hex);
+    const L = (0.2126 * c.r + 0.7152 * c.g + 0.0722 * c.b) / 255;
+    return L > 0.62 ? '#15181F' : '#FFFFFF';
+  }
+
   /* 卡片图标：优先用品牌 SVG（Simple Icons），没有就用首字/缩写做占位图标 */
   function brandPathOf(card) {
     const map = window.BRAND_ICONS || {};
@@ -440,6 +447,7 @@
     const base = hexToRgb((card.color && card.color[1]) || '#0B5FE0');
     node.style.setProperty('--sh', 'rgba(' + base.r + ',' + base.g + ',' + base.b + ',.42)');
     node.style.setProperty('--brand', (card.color && card.color[1]) || '#0B5FE0');
+    node.style.setProperty('--icon-color', contrastOn((card.color && card.color[1]) || '#0B5FE0'));
     node.innerHTML =
       iconHTML(card) +
       '<div class="c-main">' +
@@ -1340,6 +1348,17 @@
   /* ============================================================
    * 10. 模板库
    * ========================================================== */
+  function tplIconHTML(t) {
+    const path = (window.BRAND_ICONS || {})[t.name];
+    const deep = (t.color && t.color[1]) || '#0B5FE0';
+    if (path) {
+      return '<div class="tpl-icon brand" style="--brand:' + deep + '">' +
+        '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + path + '"/></svg></div>';
+    }
+    return '<div class="tpl-icon" style="background:' + grad(t.color) + '">' +
+      esc(t.glyph) + '</div>';
+  }
+
   function renderTemplates(keyword) {
     const grid = $('templateGrid');
     const kw = (keyword || '').trim();
@@ -1347,8 +1366,7 @@
     TEMPLATES.filter(t => !kw || t.name.indexOf(kw) >= 0).forEach(t => {
       const b = document.createElement('button');
       b.className = 'tpl';
-      b.innerHTML = '<div class="tpl-icon" style="background:' + grad(t.color) + '">' +
-        esc(t.glyph) + '</div><div class="tpl-name">' + esc(t.name) + '</div>';
+      b.innerHTML = tplIconHTML(t) + '<div class="tpl-name">' + esc(t.name) + '</div>';
       b.addEventListener('click', () => {
         closeOverlay('templateOverlay');
         haptic('light');

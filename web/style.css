@@ -117,11 +117,10 @@ input{font-family:inherit}
 }
 .card:active{box-shadow:0 8px 18px rgba(15,23,42,.22)}
 .c-icon{
-  width:58px;height:58px;border-radius:16px;flex:0 0 auto;display:grid;place-items:center;
-  background:rgba(255,255,255,.95);box-shadow:0 6px 14px rgba(15,23,42,.16), inset 0 0 0 .5px rgba(255,255,255,.6);
+  width:64px;height:64px;flex:0 0 auto;display:grid;place-items:center;
 }
-.c-icon svg{width:32px;height:32px;fill:var(--brand,#0A84FF)}
-.c-letter{font-size:26px;font-weight:800;color:var(--brand,#0A84FF);line-height:1}
+.c-icon svg{width:60px;height:60px;fill:var(--icon-color,#fff)}
+.c-letter{font-size:34px;font-weight:800;color:var(--icon-color,#fff);line-height:1;letter-spacing:-.5px}
 .c-main{min-width:0;flex:1 1 auto;position:relative;z-index:1}
 .c-name{font-size:15.5px;font-weight:800;letter-spacing:-.2px;text-shadow:0 1px 2px rgba(0,0,0,.10)}
 /* 轮盘卡片：账号与密码分行，各带标签 */
@@ -330,6 +329,8 @@ input{font-family:inherit}
   align-items:center;gap:9px;border:.5px solid var(--line);transition:transform .14s,box-shadow .14s}
 .tpl:active{transform:scale(.96);box-shadow:0 6px 14px rgba(15,23,42,.1)}
 .tpl-icon{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;font-size:21px;color:#fff}
+.tpl-icon.brand{background:transparent}
+.tpl-icon.brand svg{width:38px;height:38px;fill:var(--brand,#0A84FF)}
 .tpl-name{font-size:12.5px;font-weight:600;color:#0B0E14}
 
 /* ---------- toast ---------- */
@@ -466,8 +467,8 @@ input{font-family:inherit}
   box-shadow:10px 14px 28px -8px var(--sh, rgba(15,23,42,.26)),
              3px 5px 10px -3px var(--sh, rgba(15,23,42,.18));
 }
-.card.wheel-card .c-icon{width:60px;height:60px;border-radius:16px}
-.card.wheel-card .c-icon svg{width:33px;height:33px}
+.card.wheel-card .c-icon{width:64px;height:64px}
+.card.wheel-card .c-icon svg{width:60px;height:60px}
 .card.wheel-card .c-name{font-size:17.5px}
 .card.wheel-card .c-account,.card.wheel-card .c-row .pw{font-size:12.5px;letter-spacing:.3px}
 
@@ -486,7 +487,7 @@ input{font-family:inherit}
 .wheel-hint p{margin:0;font-size:11.5px;font-weight:600}
 
 /* ---------- 品牌图标（V0.11） ---------- */
-.row-icon.brand{background:#fff;box-shadow:0 3px 8px rgba(15,23,42,.12)}
-.row-icon.brand svg{width:26px;height:26px;fill:var(--brand,#0A84FF)}
+.row-icon.brand{background:transparent;box-shadow:none}
+.row-icon.brand svg{width:34px;height:34px;fill:var(--brand,#0A84FF)}
 .cat-item .row-icon.brand svg{width:24px;height:24px}
 .card .c-tag{font-size:9.5px;padding:1px 5px}
