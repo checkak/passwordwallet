@@ -143,7 +143,7 @@ def main():
         sys.exit(f"更新分支失败: {code} {upd}")
     print("已推送提交:", commit["sha"][:10], "→", args.branch)
 
-    # 3. Release
+    # 3. Release（已存在则复用，便于重复执行）
     if args.tag:
         code, rel = call(f"{API}/repos/{repo}/releases", "POST", {
             "tag_name": args.tag,
@@ -153,22 +153,41 @@ def main():
             "draft": False,
             "prerelease": False,
         })
+        if code == 422:
+            code, rel = call(f"{API}/repos/{repo}/releases/tags/{args.tag}")
+            print("Release 已存在，复用:", code)
         if code not in (200, 201):
             sys.exit(f"建 Release 失败: {code} {rel}")
         print("Release:", rel["html_url"])
+
+        # 已有的资产先列出来，避免重复上传
+        code, existing = call(f"{API}/repos/{repo}/releases/{rel['id']}/assets")
+        have = {a["name"] for a in existing} if isinstance(existing, list) else set()
 
         for path in args.assets:
             if not os.path.isfile(path):
                 print("  跳过不存在的资产:", path)
                 continue
             name = os.path.basename(path)
+            if name in have:
+                print("  已存在，跳过:", name)
+                continue
             url = f"{UPLOADS}/repos/{repo}/releases/{rel['id']}/assets?name={urllib.parse.quote(name)}"
             with open(path, "rb") as fh:
                 code, res = call(url, "POST", raw=fh.read(), ctype="application/octet-stream")
+            if isinstance(res, (bytes, bytearray)):
+                try:
+                    res = json.loads(res.decode("utf-8", "replace"))
+                except Exception:
+                    res = {}
             if code not in (200, 201):
                 print(f"  资产上传失败 {name}: {code} {res}")
             else:
-                print(f"  已上传 {name} ({res.get('size')} B)")
+                print(f"  已上传 {name} ({(res or {}).get('size')} B)")
+
+        code, assets = call(f"{API}/repos/{repo}/releases/{rel['id']}/assets")
+        if isinstance(assets, list):
+            print("Release 资产:", ", ".join(f"{a['name']}({a['size']}B)" for a in assets) or "无")
 
     # 4. 回读 /releases/latest，确认 App 会看到什么
     code, latest = call(f"{API}/repos/{repo}/releases/latest")
