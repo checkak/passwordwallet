@@ -1,0 +1,9 @@
+﻿{
+  "version": "0.6",
+  "notes": [
+    "版本更新支持联网检查（需在 app.js 里配置 UPDATE_FEED_URL）",
+    "「清空全部卡片」改为弹窗二次确认，防止误删"
+  ],
+  "url": "https://example.com/passwordwallet/download",
+  "publishedAt": "2026-11-27"
+}

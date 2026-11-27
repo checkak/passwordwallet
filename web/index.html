@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#F2F4F9">
+<title>密码卡包</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ============ 锁屏 ============ -->
+  <section id="lockScreen" class="lock-screen hidden">
+    <div class="lock-bg"></div>
+    <div class="lock-body">
+      <div class="lock-badge">🔐</div>
+      <h2 class="lock-title">密码卡包</h2>
+      <p class="lock-sub" id="lockSub">输入主密码解锁</p>
+      <div class="lock-dots" id="lockDots"></div>
+      <div class="keypad" id="keypad"></div>
+      <button class="lock-skip" id="lockForgot">忘记密码？</button>
+    </div>
+  </section>
+
+  <!-- ============ 主界面 ============ -->
+  <section id="mainScreen" class="main-screen">
+
+    <header class="app-header">
+      <h1 class="app-title">密码卡包</h1>
+      <div class="header-actions">
+        <button class="hbtn" id="btnTemplates">
+          <span class="hbtn-icon">
+            <svg viewBox="0 0 24 24" width="21" height="21"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" rx="2"/></svg>
+          </span>
+          <span class="hbtn-label">模板库</span>
+        </button>
+        <button class="hbtn" id="btnAdd">
+          <span class="hbtn-icon">
+            <svg viewBox="0 0 24 24" width="21" height="21"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/></svg>
+          </span>
+          <span class="hbtn-label">添加</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- 首页 -->
+    <main class="page" id="pageHome">
+      <div class="home-search">
+        <svg viewBox="0 0 24 24" width="17" height="17"><circle cx="11" cy="11" r="6.4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <input id="homeSearch" placeholder="搜索" autocapitalize="off" autocorrect="off" spellcheck="false">
+        <button class="search-clear hidden" id="homeSearchClear" aria-label="清空搜索">✕</button>
+      </div>
+
+      <div class="banner" id="banner">
+        <button class="banner-close" id="bannerClose" aria-label="关闭">
+          <svg viewBox="0 0 24 24" width="14" height="14"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <div class="banner-text">
+          <h3>管理你的数字生活</h3>
+          <p>让密码更安全 更便捷</p>
+        </div>
+        <div class="banner-art">🔐</div>
+      </div>
+
+      <div class="mode-switch" id="modeSwitch">
+        <button data-mode="wheel" class="active">轮盘模式</button>
+        <button data-mode="list">列表模式</button>
+      </div>
+
+      <div class="view-wrap">
+        <div class="wheel-view" id="wheelView">
+          <div class="wheel-track" id="wheelTrack"></div>
+          <div class="wheel-hint" id="wheelHint">
+            <div class="wheel-hint-icon">🔒</div>
+            <p>上滑切换</p>
+          </div>
+          <div class="wheel-counter" id="wheelCounter">1 / 1</div>
+        </div>
+
+        <div class="list-view hidden" id="listView">
+          <div class="list-head" id="listHead"></div>
+          <div class="list-track" id="listTrack"></div>
+        </div>
+      </div>
+
+      <div class="empty-state hidden" id="homeEmpty">
+        <div class="empty-art">🗂️</div>
+        <h3>还没有密码卡片</h3>
+        <p>点击右上角「＋」添加，或从「模板库」一键创建</p>
+        <button class="primary-btn" id="emptyAdd">添加第一张卡片</button>
+      </div>
+
+      <div class="empty-state hidden" id="searchEmpty">
+        <div class="empty-art">🔍</div>
+        <h3>没有匹配的卡片</h3>
+        <p>换个 App 名称、账号片段或分类关键词试试</p>
+      </div>
+    </main>
+
+    <!-- 分类 -->
+    <main class="page hidden" id="pageCategory">
+      <p class="page-lead">按用途分组，快速定位你要找的账号</p>
+      <div id="categoryBody"></div>
+    </main>
+
+    <!-- 收藏 -->
+    <main class="page hidden" id="pageFav">
+      <p class="page-lead">星标卡片会出现在这里</p>
+      <div id="favBody"></div>
+    </main>
+
+    <!-- 我的 -->
+    <main class="page hidden" id="pageMe">
+      <div class="me-card">
+        <div class="me-avatar">🔑</div>
+        <div>
+          <h3>本地密码管家</h3>
+          <p id="meStat">0 张卡片 · 数据仅保存在本机</p>
+        </div>
+      </div>
+      <div class="setting-group">
+        <div class="group-title">安全</div>
+        <div class="setting-row" id="rowPasscode">
+          <div class="sr-main"><span class="sr-icon">🔒</span><span>主密码</span></div>
+          <span class="sr-value" id="passcodeState">未开启</span>
+        </div>
+        <div class="setting-row" id="rowAutoLock">
+          <div class="sr-main"><span class="sr-icon">⏱️</span><span>切到后台自动锁定</span></div>
+          <label class="switch"><input type="checkbox" id="swAutoLock" checked><span></span></label>
+        </div>
+      </div>
+      <div class="setting-group">
+        <div class="group-title">数据</div>
+        <div class="setting-row" id="rowExport"><div class="sr-main"><span class="sr-icon">📤</span><span>导出备份</span></div><span class="chev">›</span></div>
+        <div class="setting-row" id="rowImport"><div class="sr-main"><span class="sr-icon">📥</span><span>从剪贴板导入</span></div><span class="chev">›</span></div>
+        <div class="setting-row danger" id="rowClear"><div class="sr-main"><span class="sr-icon">🗑️</span><span>清空全部卡片</span></div><span class="chev">›</span></div>
+      </div>
+      <div class="setting-group">
+        <div class="group-title">关于</div>
+        <div class="setting-row" id="rowHelp"><div class="sr-main"><span class="sr-icon">📖</span><span>使用手册</span></div><span class="chev">›</span></div>
+        <div class="setting-row" id="rowUpdate"><div class="sr-main"><span class="sr-icon">🔄</span><span>版本更新</span><i class="red-dot hidden" id="updateDot"></i></div><span class="sr-value" id="updateState">已是最新</span></div>
+        <div class="setting-row"><div class="sr-main"><span class="sr-icon">💡</span><span>版本</span></div><span class="sr-value" id="appVersion">V0.6</span></div>
+        <div class="setting-row"><div class="sr-main"><span class="sr-icon">✍️</span><span>作者</span></div><span class="sr-value author">不愿透露姓名的程同学@2026</span></div>
+      </div>
+    </main>
+
+    <!-- 底部标签栏 -->
+    <nav class="tabbar" id="tabbar">
+      <button class="tab active" data-tab="home">
+        <svg viewBox="0 0 24 24" width="23" height="23"><path d="M4 10.8 12 4l8 6.8V19a2 2 0 0 1-2 2h-3.6v-5.6H9.6V21H6a2 2 0 0 1-2-2z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        <span>首页</span>
+      </button>
+      <button class="tab" data-tab="category">
+        <svg viewBox="0 0 24 24" width="23" height="23"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        <span>分类</span>
+      </button>
+      <button class="tab" data-tab="fav">
+        <svg viewBox="0 0 24 24" width="23" height="23"><path d="m12 4.6 2.35 4.76 5.25.77-3.8 3.7.9 5.23L12 16.6l-4.7 2.46.9-5.23-3.8-3.7 5.25-.77z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        <span>收藏</span>
+      </button>
+      <button class="tab" data-tab="me">
+        <svg viewBox="0 0 24 24" width="23" height="23"><circle cx="12" cy="8.6" r="3.6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M4.8 20c.9-3.5 3.8-5.4 7.2-5.4s6.3 1.9 7.2 5.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <span>我的</span>
+      </button>
+    </nav>
+  </section>
+
+  <!-- ============ 卡片详情 ============ -->
+  <section class="overlay" id="detailOverlay">
+    <div class="sheet detail-sheet" id="detailSheet">
+      <button class="sheet-close" id="detailClose">
+        <svg viewBox="0 0 24 24" width="15" height="15"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+      </button>
+      <div class="detail-scroll">
+        <div class="detail-art" id="detailArt">
+          <div class="detail-art-icon" id="detailIcon">💬</div>
+          <div class="detail-art-meta">
+            <div class="detail-art-name" id="detailName">微信</div>
+            <div class="detail-art-line" id="detailMasked">wx****88</div>
+          </div>
+          <div class="detail-art-shine"></div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-row">
+            <div class="info-label">账号</div>
+            <div class="info-value" id="detailAccount">-</div>
+            <button class="copy-btn" data-copy="account" aria-label="复制账号">
+              <svg viewBox="0 0 24 24" width="18" height="18"><rect x="9" y="9" width="11" height="11" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M15 6.5V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+          <div class="divider"></div>
+          <div class="info-row">
+            <div class="info-label">密码</div>
+            <div class="info-value mono" id="detailPassword">••••••••</div>
+            <button class="ghost-btn" id="togglePwd" aria-label="显示密码">
+              <svg viewBox="0 0 24 24" width="19" height="19"><path d="M2.5 12S6 6.2 12 6.2 21.5 12 21.5 12 18 17.8 12 17.8 2.5 12 2.5 12z" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="12" r="2.6" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>
+            </button>
+            <button class="copy-btn" data-copy="password" aria-label="复制密码">
+              <svg viewBox="0 0 24 24" width="18" height="18"><rect x="9" y="9" width="11" height="11" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M15 6.5V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+          <div class="divider"></div>
+          <div class="info-row">
+            <div class="info-label">分类</div>
+            <div class="info-value" id="detailCategory">-</div>
+          </div>
+          <div class="divider"></div>
+          <div class="info-row">
+            <div class="info-label">备注</div>
+            <div class="info-value" id="detailNote">-</div>
+          </div>
+          <div class="divider"></div>
+          <div class="info-row">
+            <div class="info-label">更新</div>
+            <div class="info-value subtle" id="detailUpdated">-</div>
+          </div>
+        </div>
+
+        <div class="detail-actions">
+          <button class="pill-btn" id="detailFav">☆ 收藏</button>
+          <button class="pill-btn" id="detailEdit">✎ 编辑</button>
+          <button class="pill-btn danger" id="detailDelete">🗑 删除</button>
+        </div>
+        <p class="detail-tip">密码仅保存在本机加密存储中，复制后 60 秒自动清空剪贴板。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 新建 / 编辑 ============ -->
+  <section class="overlay" id="editorOverlay">
+    <div class="sheet editor-sheet">
+      <div class="sheet-grabber"></div>
+      <div class="sheet-head">
+        <button class="link-btn" id="editorCancel">取消</button>
+        <h3 id="editorTitle">新建卡片</h3>
+        <button class="link-btn strong" id="editorSave">保存</button>
+      </div>
+      <div class="editor-scroll">
+        <div class="preview-card" id="previewCard">
+          <div class="preview-icon" id="previewIcon">💬</div>
+          <div class="preview-meta">
+            <div class="preview-name" id="previewName">应用名称</div>
+            <div class="preview-line" id="previewLine">账号 / 密码</div>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">应用名称</label>
+          <input class="field-input" id="fName" placeholder="如：微信 / 招商银行" maxlength="24">
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">账号</label>
+          <input class="field-input" id="fAccount" placeholder="手机号 / 邮箱 / 用户名" autocapitalize="off" autocorrect="off" spellcheck="false">
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">密码</label>
+          <div class="field-inline">
+            <input class="field-input" id="fPassword" placeholder="输入或生成强密码" autocapitalize="off" autocorrect="off" spellcheck="false">
+            <button class="mini-btn" id="btnGen">生成</button>
+          </div>
+          <div class="strength"><div class="strength-bar"><i id="strengthFill"></i></div><span id="strengthText">强度：—</span></div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">备注</label>
+          <input class="field-input" id="fNote" placeholder="填写你的小秘密" maxlength="60">
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">分类</label>
+          <div class="chips" id="catChips"></div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">图标</label>
+          <div class="icon-grid" id="iconGrid"></div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">卡片配色</label>
+          <div class="swatches" id="swatches"></div>
+          <div class="rgb-panel hidden" id="rgbPanel">
+            <div class="rgb-head">
+              <span class="rgb-preview" id="rgbPreview"></span>
+              <span class="rgb-hex" id="rgbHex">#0A84FF</span>
+              <button class="mini-btn ghost-mini" id="rgbApply">应用</button>
+            </div>
+            <div class="rgb-row"><span class="rgb-label">R</span><input type="range" id="rgbR" min="0" max="255" value="10"><b id="rgbRv">10</b></div>
+            <div class="rgb-row"><span class="rgb-label">G</span><input type="range" id="rgbG" min="0" max="255" value="132"><b id="rgbGv">132</b></div>
+            <div class="rgb-row"><span class="rgb-label">B</span><input type="range" id="rgbB" min="0" max="255" value="255"><b id="rgbBv">255</b></div>
+          </div>
+          <p class="field-hint">点最后那个彩色圆点可自定义 RGB 颜色</p>
+        </div>
+
+        <div class="field-group inline-row">
+          <label class="field-label">加入收藏</label>
+          <label class="switch"><input type="checkbox" id="fFav"><span></span></label>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 模板库 ============ -->
+  <section class="overlay" id="templateOverlay">
+    <div class="sheet template-sheet">
+      <div class="sheet-grabber"></div>
+      <div class="sheet-head">
+        <span></span>
+        <h3>模板库</h3>
+        <button class="link-btn" id="templateClose">完成</button>
+      </div>
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" width="17" height="17"><circle cx="11" cy="11" r="6.4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <input id="templateSearch" placeholder="搜索 App 名称">
+      </div>
+      <div class="template-scroll"><div class="template-grid" id="templateGrid"></div></div>
+      <p class="sheet-note">点击模板即可预填名称、配色与图标，保存后生成卡片。</p>
+    </div>
+  </section>
+
+  <!-- ============ 使用手册 ============ -->
+  <section class="overlay" id="helpOverlay">
+    <div class="sheet help-sheet">
+      <div class="sheet-grabber"></div>
+      <button class="sheet-close" id="helpClose" aria-label="关闭">
+        <svg viewBox="0 0 24 24" width="15" height="15"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+      </button>
+      <div class="help-scroll">
+        <div class="help-hero">
+          <div class="help-hero-icon">📖</div>
+          <div class="help-hero-body">
+            <div class="help-hero-title">使用手册</div>
+            <div class="help-hero-sub">V0.6 · 操作方法与版本记录</div>
+          </div>
+        </div>
+
+        <div class="help-card">
+          <h4>操作手册</h4>
+          <ol class="help-steps">
+            <li>
+              <b>切换卡片</b>
+              <span>首页上滑 / 下滑在轮盘里切换，松手自动吸附居中；也可以点顶部切到「列表模式」一屏看全部。</span>
+            </li>
+            <li>
+              <b>搜索卡片</b>
+              <span>首页轮盘上方有搜索框：输入 App 名、账号片段、分类或备注中的任意字样，轮盘与列表都会即时过滤；点右侧 ✕ 清空恢复全部。</span>
+            </li>
+            <li>
+              <b>查看与复制</b>
+              <span>点卡片进入详情：账号直接可见，密码点眼睛显形；两个复制键分别复制账号、密码，密码复制后 60 秒自动清空剪贴板。</span>
+            </li>
+            <li>
+              <b>模板库建卡</b>
+              <span>右上「模板库」里有 60+ 主流 App，点一下即预填名称、配色、图标和分类，补上账号密码保存就行。</span>
+            </li>
+            <li>
+              <b>自定义卡片</b>
+              <span>右上「＋」新建：密码可点「生成」得到 16 位强密码；图标 28 选 1；配色 10 套预设，或点彩色圆点自己拖 RGB。</span>
+            </li>
+            <li>
+              <b>分类与收藏</b>
+              <span>底部「分类」按用途分组、「收藏」放常用账号；详情页可一键收藏 / 取消收藏。</span>
+            </li>
+            <li>
+              <b>主密码</b>
+              <span>「我的 → 主密码」设置 6 位数字，之后每次启动或从后台切回来都要解锁。</span>
+            </li>
+            <li>
+              <b>备份与迁移</b>
+              <span>「我的 → 导出备份」生成 JSON 走系统分享；换机后用「从剪贴板导入」把备份粘回来即可恢复。</span>
+            </li>
+          </ol>
+        </div>
+
+        <div class="help-card">
+          <h4>版本更新</h4>
+          <div class="log-item">
+            <span class="log-tag current">V0.6</span>
+            <ul>
+              <li>版本更新接入 GitHub Releases：配置「用户名/仓库名」后读取最新 release</li>
+              <li>更新页展示远端更新说明，版本号支持 v0.6 / 0.6 / 0.6-beta 写法</li>
+              <li>版本号升至 0.6（iOS 0.6 / build 6，Android 0.6 / versionCode 6）</li>
+            </ul>
+          </div>
+          <div class="log-item">
+            <span class="log-tag">V0.5</span>
+            <ul>
+              <li>版本更新支持联网检查（需配置更新源 JSON 地址），启动时静默拉取最新版本号</li>
+              <li>更新页显示「上次检查」状态，更新源不可达时静默降级</li>
+              <li>「清空全部卡片」加弹窗二次确认，防止误删</li>
+              <li>版本号升至 0.5（iOS 0.5 / build 5，Android 0.5 / versionCode 5）</li>
+            </ul>
+          </div>
+          <div class="log-item">
+            <span class="log-tag">V0.4</span>
+            <ul>
+              <li>轮盘卡片高度 132→116pt，四周加强投影，卡片更小巧也更立体</li>
+              <li>分类页分组标题加配色标签（社交蓝 / 支付橙 / 购物红 / 影音紫 / 游戏绿 / 工具青 / 金融金）</li>
+              <li>「关于」新增版本更新入口，有新版本显示小红点，点开后红点消失</li>
+              <li>版本号升至 0.4（iOS 0.4 / build 4，Android 0.4 / versionCode 4）</li>
+            </ul>
+          </div>
+          <div class="log-item">
+            <span class="log-tag">V0.3</span>
+            <ul>
+              <li>卡片上的账号新增「账号」标签，与「密码」标签左右对齐</li>
+              <li>首页新增搜索框：按 App 名 / 账号 / 分类 / 备注即时过滤，轮盘与列表同时生效</li>
+              <li>搜索框移到首页最上方，输入提示简化为「搜索」</li>
+              <li>轮盘卡片整体缩小（高度 156→132pt），一屏能看到更多卡片</li>
+              <li>搜索无结果时显示空状态提示，点 ✕ 一键清空</li>
+              <li>版本号升至 0.3（iOS 0.3 / build 3，Android 0.3 / versionCode 3）</li>
+            </ul>
+          </div>
+          <div class="log-item">
+            <span class="log-tag">V0.2</span>
+            <ul>
+              <li>模板库标题由「主流 App 模板」改为「模板库」</li>
+              <li>模板从 22 个扩充到 67 个，覆盖社交 / 支付 / 购物 / 影音 / 游戏 / 工具 / 金融</li>
+              <li>备注输入提示改为「填写你的小秘密」</li>
+              <li>轮盘卡片上的账号与密码分行显示，窄屏不再挤在一起</li>
+              <li>卡片配色新增自定义 RGB 取色（三通道滑杆 + 实时预览）</li>
+              <li>使用手册独立成页，写成操作方法与版本日志（不再复用卡片详情）</li>
+              <li>版本号升至 0.2</li>
+            </ul>
+          </div>
+          <div class="log-item">
+            <span class="log-tag">V0.1</span>
+            <ul>
+              <li>首个版本：轮盘 / 列表双模式主页，卡片按品牌色渐变</li>
+              <li>账号遮罩显示、点卡片进钱包式详情页，账号密码一键复制</li>
+              <li>22 个主流 App 模板、自定义卡片、分类 / 收藏 / 我的</li>
+              <li>6 位主密码锁屏、AES-256 加密存储、备份导出与剪贴板导入</li>
+            </ul>
+          </div>
+        </div>
+
+        <p class="help-foot">作者：不愿透露姓名的程同学@2026</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 版本更新 ============ -->
+  <section class="overlay" id="updateOverlay">
+    <div class="sheet update-sheet">
+      <div class="sheet-grabber"></div>
+      <button class="sheet-close" id="updateClose" aria-label="关闭">
+        <svg viewBox="0 0 24 24" width="15" height="15"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+      </button>
+      <div class="update-scroll">
+        <div class="update-hero">
+          <div class="update-hero-icon">🔄</div>
+          <div>
+            <h4>版本更新</h4>
+            <p id="updateSummary">当前已是最新版本</p>
+          </div>
+        </div>
+
+        <div class="update-ver">
+          <span class="uv-label">当前版本</span>
+          <span class="uv-right"><span class="uv-value" id="uvCurrent">V0.6</span></span>
+        </div>
+        <div class="update-ver">
+          <span class="uv-label">最新版本</span>
+          <span class="uv-right"><span class="uv-value fresh" id="uvLatest">V0.6</span><span class="badge-new hidden" id="uvBadge">NEW</span></span>
+        </div>
+        <p class="update-checked" id="updateChecked">未配置更新源（离线模式，仅比对安装包内版本）</p>
+
+        <div class="help-card hidden" id="remoteNotesCard" style="margin-top:16px">
+          <h4 id="remoteNotesTitle">远程更新内容</h4>
+          <div class="log-item">
+            <span class="log-tag current">NEW</span>
+            <ul id="remoteNotesList"></ul>
+          </div>
+        </div>
+
+        <div class="help-card" style="margin-top:16px">
+          <h4>V0.6 更新内容</h4>
+          <div class="log-item">
+            <span class="log-tag current">V0.6</span>
+            <ul>
+              <li>更新检查支持 GitHub Releases：填「用户名/仓库名」即可读最新 release 的版本号与正文</li>
+              <li>更新页会展示远端 Release 的更新说明（有新版本时才出现）</li>
+              <li>版本号解析兼容 v0.6 / 0.6 / 0.6-beta 等标签写法</li>
+              <li>版本号升至 0.6</li>
+            </ul>
+          </div>
+          <div class="log-item">
+            <span class="log-tag">V0.5</span>
+            <ul>
+              <li>「版本更新」支持联网检查：配置更新源后，启动与打开更新页会拉取最新版本号</li>
+              <li>更新页新增「上次检查」状态行（未配置 / 刚刚 / x 分钟前 / 更新源不可达）</li>
+              <li>远程版本高于当前版本时显示小红点与 NEW 徽标；更新源不可达时静默降级，不影响使用</li>
+              <li>「清空全部卡片」改为居中弹窗二次确认，避免误删（取消即无操作）</li>
+              <li>版本号升至 0.5</li>
+            </ul>
+          </div>
+          <div class="log-item">
+            <span class="log-tag">V0.4</span>
+            <ul>
+              <li>轮盘卡片进一步缩小，四周加强投影，卡片与背景分离更清楚</li>
+              <li>分类页每个分组标题加上专属配色（社交蓝 / 支付橙 / 购物红 / 影音紫 / 游戏绿 / 工具青 / 金融金）</li>
+              <li>「关于」新增「版本更新」入口，有新版本时显示小红点</li>
+              <li>版本号升至 0.4</li>
+            </ul>
+          </div>
+        </div>
+        <p class="help-foot">离线检查：本版为本地应用，版本信息随安装包发布</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 确认弹窗 ============ -->
+  <section class="overlay dialog-overlay" id="confirmOverlay">
+    <div class="dialog" role="alertdialog" aria-modal="true">
+      <h3 id="confirmTitle">清空全部卡片</h3>
+      <p id="confirmMessage">此操作不可恢复。</p>
+      <div class="dialog-actions">
+        <button class="dialog-btn" id="confirmCancel">取消</button>
+        <button class="dialog-btn danger" id="confirmOk">清空</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

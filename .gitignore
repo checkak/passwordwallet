@@ -1,0 +1,15 @@
+# 构建产物（不入库，发布时由脚本上传到 Release）
+build/out/
+build/apk/
+build/*.ipa
+build/*.apk
+build/*.zip
+
+# 系统/编辑器
+.DS_Store
+Thumbs.db
+*.log
+
+# 依赖（本项目无，占位）
+node_modules/
+__pycache__/
