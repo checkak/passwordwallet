@@ -71,6 +71,13 @@ def tracked_files():
     return files
 
 
+def safe_asset_name(name):
+    """GitHub 资产名走 URL 参数，中文会被吞掉，这里统一成 ASCII 名。"""
+    if name.isascii():
+        return name
+    return name.replace("密码卡包", "PasswordWallet")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--repo", required=True, help="owner/name")
@@ -168,7 +175,7 @@ def main():
             if not os.path.isfile(path):
                 print("  跳过不存在的资产:", path)
                 continue
-            name = os.path.basename(path)
+            name = safe_asset_name(os.path.basename(path))
             if name in have:
                 print("  已存在，跳过:", name)
                 continue

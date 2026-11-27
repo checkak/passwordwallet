@@ -764,7 +764,8 @@
 
     let url;
     if (mode === 'github') {
-      url = 'https://api.github.com/repos/' + GITHUB_UPDATE_REPO + '/releases/latest';
+      const apiBase = (typeof window !== 'undefined' && window.__UPDATE_API_BASE) || 'https://api.github.com';
+      url = apiBase + '/repos/' + GITHUB_UPDATE_REPO + '/releases/latest';
     } else {
       const sep = UPDATE_FEED_URL.indexOf('?') >= 0 ? '&' : '?';
       url = UPDATE_FEED_URL + sep + 't=' + Date.now();
