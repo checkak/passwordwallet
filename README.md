@@ -1,16 +1,25 @@
-﻿# 密码卡包 PasswordWallet · V0.6
+﻿# 密码卡包 PasswordWallet · V0.8
 
 一个本地优先的 iOS / Android 密码卡片 App：主页用「轮盘」式卡片轮播展示各 App 的账号密码（默认遮罩），
 点开卡片进入钱包式详情页查看 / 复制明文。数据只存在本机，AES-256 加密落盘。
 
 - 产物：
-  - `build/密码卡包-V0.6.ipa`（iOS，未签名需自签；iOS 12.0+ / arm64）
-  - `build/密码卡包-V0.6.apk`（Android，已签名直接装；Android 6.0+ / API 23）
+  - `build/密码卡包-V0.8.ipa`（iOS，未签名需自签；iOS 12.0+ / arm64）
+  - `build/密码卡包-V0.8.apk`（Android，已签名直接装；Android 6.0+ / API 23）
 - 包名：`com.cxk.password`（两端一致，可从 V0.5 及更早覆盖升级）
 - 技术栈：原生壳（iOS=Objective-C+WKWebView，Android=Java+WebView）+ 共用 HTML/CSS/JS 界面 + 系统钥匙串加密存储
 - 详细说明见 [交付说明.md](交付说明.md)
 
 ## 版本记录
+
+### V0.8
+1. 修复 Android 联网检查：补 `INTERNET` / `ACCESS_NETWORK_STATE` 权限
+2. 更新页失败时显示具体原因
+
+### V0.7
+1. 轮盘模式改为「左轮转盘」：扇形叠放 + 上下滑动切换 + 选中卡浮起 + 页码点
+2. 模式切换移到右上角按钮；删除卡片加弹窗确认
+3. 分类 14 类、图标 56 个
 
 ### V0.6
 1. 「版本更新」接入 **GitHub Releases**：填 `GITHUB_UPDATE_REPO = '用户名/仓库名'` 即可读取最新 release
@@ -40,7 +49,7 @@
 ```bash
 # 只改界面
 cp web/* build/out/Payload/PasswordWallet.app/web/
-python tools/pack_ipa.py build/out/Payload/PasswordWallet.app build/密码卡包-V0.6.ipa   # iOS
+python tools/pack_ipa.py build/out/Payload/PasswordWallet.app build/密码卡包-V0.8.ipa   # iOS
 wsl -d Ubuntu2204 -- bash /mnt/e/DATA/Pojia/PasswordWallet/build/build_apk.sh            # Android
 
 # 改原生代码

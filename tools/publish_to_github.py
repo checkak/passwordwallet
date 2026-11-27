@@ -167,9 +167,30 @@ def main():
             sys.exit(f"建 Release 失败: {code} {rel}")
         print("Release:", rel["html_url"])
 
-        # 已有的资产先列出来，避免重复上传
+        # 已有资产先列出来，避免重复上传
         code, existing = call(f"{API}/repos/{repo}/releases/{rel['id']}/assets")
         have = {a["name"] for a in existing} if isinstance(existing, list) else set()
+
+        # 额外挂一份 version.json：App 在 API 被限流（403/429）时可走
+        # https://github.com/<repo>/releases/latest/download/version.json 取版本
+        ver = args.tag[1:] if args.tag[:1] in ("v", "V") else args.tag
+        feed = {
+            "version": ver,
+            "notes": [l.strip("- ").strip() for l in (args.notes or "").splitlines() if l.strip()][:6],
+            "url": rel.get("html_url", ""),
+        }
+        if "version.json" not in have:
+            body = json.dumps(feed, ensure_ascii=False).encode("utf-8")
+            url = f"{UPLOADS}/repos/{repo}/releases/{rel['id']}/assets?name=version.json"
+            code, res = call(url, "POST", raw=body, ctype="application/json")
+            if isinstance(res, (bytes, bytearray)):
+                try:
+                    res = json.loads(res.decode("utf-8", "replace"))
+                except Exception:
+                    res = {}
+            print("  version.json:", code)
+        else:
+            print("  version.json 已存在，跳过")
 
         for path in args.assets:
             if not os.path.isfile(path):

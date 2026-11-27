@@ -100,7 +100,7 @@
   };
 
   /* 版本更新：随包发布的“最新版本”，用于小红点与更新页 */
-  const LATEST_VERSION = '0.8';
+  const LATEST_VERSION = '0.9';
 
   /* 联网检查地址（二选一，留空 = 关闭联网检查）。
      A. GitHub Releases 推荐：填 '用户名/仓库名'，例 'cheng/passwordwallet'
@@ -476,7 +476,7 @@
     const n = cards.length;
 
     // 卡片扇形间距：张数多时自动压缩
-    const pitch = Math.max(76, Math.min(108, (h - cardH - 40) / Math.max(1, n - 1)));
+    const pitch = Math.max(96, Math.min(124, (h - cardH - 56) / Math.max(1, n - 1)));
     const totalSpan = (n - 1) * pitch + cardH;
     // 选中卡片锚在容器 40% 高度处（偏上，给右侧提示留白）
     const anchor = Math.round(h * 0.32);
@@ -488,7 +488,7 @@
       const ad = Math.abs(d);
       const baseY = centerY + i * pitch + shift;
       const ty = Math.max(-cardH, baseY - cardH / 2);   // 越界后裁掉
-      const tx = Math.min(26, ad * 8);         // 越远越往右探出（左轮扇形）
+      const tx = Math.min(20, ad * 6);         // 越远越往右探出（左轮扇形）
       const rot = Math.min(4.5, ad * 1.6);     // 轻微倾斜
       const sc = d === 0 ? 1.03 : 1 - Math.min(ad, 4) * 0.028;
       const op = ad > 4 ? 0 : Math.max(0.28, 1 - ad * 0.16);
@@ -867,30 +867,47 @@
     const last = state.settings.lastCheckAt || 0;
     if (!force && Date.now() - last < UPDATE_CHECK_TTL) return;
 
-    let url;
+    let info = null;
+    let lastError = null;
+
     if (mode === 'github') {
       const apiBase = (typeof window !== 'undefined' && window.__UPDATE_API_BASE) || 'https://api.github.com';
-      url = apiBase + '/repos/' + GITHUB_UPDATE_REPO + '/releases/latest';
+      try {
+        const data = await fetchJsonViaBridge(apiBase + '/repos/' + GITHUB_UPDATE_REPO + '/releases/latest');
+        info = parseFeed('github', data);
+        if (!info) lastError = new Error('bad feed');
+      } catch (e) {
+        lastError = e;
+      }
+      // 备用通道：Release 上挂的 version.json（releases/latest/download 不吃 API 限流）
+      if (!info) {
+        try {
+          const fb = await fetchJsonViaBridge(
+            'https://github.com/' + GITHUB_UPDATE_REPO + '/releases/latest/download/version.json');
+          info = parseFeed('json', fb);
+        } catch (e2) {
+          lastError = e2;
+        }
+      }
     } else {
-      const sep = UPDATE_FEED_URL.indexOf('?') >= 0 ? '&' : '?';
-      url = UPDATE_FEED_URL + sep + 't=' + Date.now();
+      try {
+        const sep = UPDATE_FEED_URL.indexOf('?') >= 0 ? '&' : '?';
+        info = parseFeed('json', await fetchJsonViaBridge(UPDATE_FEED_URL + sep + 't=' + Date.now()));
+      } catch (e) {
+        lastError = e;
+      }
     }
 
-    try {
-      const data = await fetchJsonViaBridge(url);
-      const info = parseFeed(mode, data);
-      if (info && info.version) {
-        state.settings.remoteVersion = info.version;
-        state.settings.remoteNotes = info.notes;
-        state.settings.remoteUrl = info.url;
-        state.settings.remoteName = info.name;
-        state.settings.lastCheckOk = true;
-      } else {
-        state.settings.lastCheckOk = false;
-      }
-    } catch (e) {
+    if (info && info.version) {
+      state.settings.remoteVersion = info.version;
+      state.settings.remoteNotes = info.notes || [];
+      state.settings.remoteUrl = info.url || '';
+      state.settings.remoteName = info.name || '';
+      state.settings.lastCheckOk = true;
+      state.settings.lastCheckError = '';
+    } else {
       state.settings.lastCheckOk = false;
-      state.settings.lastCheckError = String((e && e.message) || e);
+      if (lastError) state.settings.lastCheckError = String(lastError.message || lastError);
     }
     state.settings.lastCheckAt = Date.now();
     await persist();

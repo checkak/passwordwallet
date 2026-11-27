@@ -1,5 +1,5 @@
 ﻿#!/usr/bin/env bash
-# 密码卡包 V0.8 — 无 Xcode 构建 IPA（WSL: clang-14 + ld64.lld + iPhoneOS16.5.sdk）
+# 密码卡包 V0.9 — 无 Xcode 构建 IPA（WSL: clang-14 + ld64.lld + iPhoneOS16.5.sdk）
 set -euo pipefail
 
 SRC=/mnt/e/DATA/Pojia/PasswordWallet
@@ -47,11 +47,11 @@ printf 'APPL????' > "$BUNDLE/PkgInfo"
 
 echo "== 4/4 打包 IPA =="
 cd "$OUT"
-zip -qry "$SRC/build/$APPNAME-V0.8.ipa" Payload
+zip -qry "$SRC/build/$APPNAME-V0.9.ipa" Payload
 cd "$SRC/build"
 
 echo "--- 产物 ---"
-ls -lh "$SRC/build/$APPNAME-V0.8.ipa"
+ls -lh "$SRC/build/$APPNAME-V0.9.ipa"
 file "$BUNDLE/$APPNAME"
-sha256sum "$SRC/build/$APPNAME-V0.8.ipa"
+sha256sum "$SRC/build/$APPNAME-V0.9.ipa"
 echo "BUILD_OK"

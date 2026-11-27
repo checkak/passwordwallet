@@ -1,4 +1,4 @@
-/* 密码卡包 V0.1 — 视觉层 */
+﻿/* 密码卡包 V0.1 — 视觉层 */
 :root{
   --bg:#F2F4F9;
   --ink:#0B0E14;
@@ -6,7 +6,7 @@
   --line:#E7EAF1;
   --blue:#0A84FF;
   --danger:#E5484D;
-  --card-shadow:0 10px 26px rgba(15,23,42,.10);
+  --card-shadow:0 4px 12px rgba(15,23,42,.10), 0 1px 3px rgba(15,23,42,.06);
   --safe-t:env(safe-area-inset-top,0px);
   --safe-b:env(safe-area-inset-bottom,0px);
   --tabbar-h:64px;
@@ -105,10 +105,8 @@ input{font-family:inherit}
 .card{
   position:relative;height:116px;margin:6px 14px;border-radius:19px;padding:12px 14px;
   display:flex;align-items:center;gap:11px;color:#fff;overflow:hidden;text-align:left;
-  transform-origin:left center;will-change:transform,opacity;
-  scroll-snap-align:center;scroll-margin-block:52px;
-  box-shadow:0 16px 30px -10px rgba(15,23,42,.42), 0 6px 14px rgba(15,23,42,.16),
-             inset 0 1px 0 rgba(255,255,255,.20);
+  transform-origin:left center;
+  box-shadow:0 5px 14px rgba(15,23,42,.14), 0 1px 3px rgba(15,23,42,.08);
   transition:box-shadow .2s ease;
 }
 .card::after{
@@ -455,29 +453,29 @@ input{font-family:inherit}
 .wheel-view{position:absolute;inset:0;overflow:hidden;touch-action:none}
 .wheel-track{position:absolute;inset:0}
 .card.wheel-card{
-  position:absolute;left:14px;top:0;margin:0;width:calc(100% - 128px);height:108px;
-  border-radius:20px;padding:12px 14px;transform-origin:left center;
+  position:absolute;left:14px;top:0;margin:0;width:calc(100% - 40px);height:128px;
+  border-radius:22px;padding:14px 16px;transform-origin:left center;
   transition:transform .36s cubic-bezier(.25,.9,.25,1),opacity .3s ease,box-shadow .3s ease;
-  box-shadow:0 18px 32px -14px rgba(15,23,42,.50), 0 6px 14px rgba(15,23,42,.14),
-             inset 0 1px 0 rgba(255,255,255,.18);
+  box-shadow:0 6px 16px rgba(15,23,42,.16), 0 1px 4px rgba(15,23,42,.10);
 }
 .card.wheel-card.is-active{
-  box-shadow:0 24px 44px -14px rgba(15,23,42,.55), 0 10px 20px rgba(15,23,42,.18),
-             inset 0 1px 0 rgba(255,255,255,.26);
+  box-shadow:0 10px 24px rgba(15,23,42,.22), 0 2px 6px rgba(15,23,42,.12);
 }
-.card.wheel-card .c-icon{width:46px;height:46px;border-radius:14px;font-size:23px}
-.card.wheel-card .c-name{font-size:16px}
+.card.wheel-card .c-icon{width:54px;height:54px;border-radius:16px;font-size:27px}
+.card.wheel-card .c-name{font-size:18px}
 .card.wheel-card .c-tag{display:none}
-.card.wheel-card .c-account,.card.wheel-card .c-row .pw{font-size:11.5px}
+.card.wheel-card .c-account,.card.wheel-card .c-row .pw{font-size:12.5px;letter-spacing:.3px}
 
-.wheel-dots{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);
-  display:flex;align-items:center;gap:6px;z-index:5}
+.wheel-dots{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);
+  display:flex;align-items:center;gap:6px;z-index:400}
 .wheel-dots i{width:6px;height:6px;border-radius:50%;background:#CBD2DF;transition:all .25s ease}
 .wheel-dots i.on{background:var(--blue);width:16px;border-radius:100px}
 
 .wheel-hint{
-  position:absolute;right:10px;top:38%;transform:translateY(-50%);
-  text-align:center;color:#9AA2B4;z-index:1;pointer-events:none;transition:opacity .5s ease;
+  position:absolute;right:12px;top:6px;z-index:320;pointer-events:none;
+  display:flex;align-items:center;gap:6px;padding:5px 11px 5px 8px;border-radius:100px;
+  background:rgba(255,255,255,.94);color:#7A8296;box-shadow:0 3px 10px rgba(15,23,42,.08);
+  font-size:11.5px;font-weight:600;line-height:1;transition:opacity .5s ease;
 }
-.wheel-hint-icon{font-size:26px;opacity:.85;margin-bottom:10px}
-.wheel-hint p{margin:0;font-size:12px;line-height:1.6;font-weight:500}
+.wheel-hint-icon{font-size:13px;opacity:.9}
+.wheel-hint p{margin:0;font-size:11.5px;font-weight:600}
